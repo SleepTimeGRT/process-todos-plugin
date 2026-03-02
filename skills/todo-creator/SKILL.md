@@ -58,6 +58,8 @@ Use the brainstorming output to decide how to split the work:
 - **Separate client state from UI** for complex interactive features. Stores, hooks, and WebSocket connections are testable independently of the rendering layer. A dedicated state-management todo lets the worker establish the data flow before any UI is built.
 - This finer split produces more independently reviewable PRs and reduces merge conflicts in parallel processing.
 
+**For features outside the traditional data → API → UI pattern** (config validation, tooling, documentation, CI/CD), apply the same principle with adapted layers: separate *definition/schema* from *integration/wiring* from *user-facing polish*. For example, a config validation feature splits into: (1) define the schema, (2) wire validation into the system, (3) polish error messages and edge cases.
+
 **Don't fear large todos.** The worker agents support handoff (`/dx:handoff`) — when a worker approaches its context limit, it writes a HANDOFF.md documenting progress and decisions, and a fresh worker picks up where it left off. This means a todo with 10+ checklist items is perfectly fine if the items are logically cohesive. Splitting tightly coupled work across separate todos creates more problems (merge conflicts, duplicated context) than letting one worker handle it with handoffs.
 
 **When to split vs keep together:**
