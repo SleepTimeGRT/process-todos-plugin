@@ -33,15 +33,9 @@ Your recommendations directly shape how todos are structured and split — a goo
 
 1. **Parse the decision** — Identify the options and what trade-offs each implies for todo structure. What would each option mean in terms of number of todos, their dependencies, and which files they'd touch?
 
-2. **Read project context** — Start broad, then narrow:
-   - Directory structure (`ls` key directories) to understand overall layout
-   - `CLAUDE.md` for documented conventions and preferences
-   - `package.json` / `pubspec.yaml` / equivalent for tech stack and dependencies
+2. **Read project context** — Start broad, then narrow: directory structure (overall layout), `CLAUDE.md` (conventions), and dependency manifest (`package.json` / `pubspec.yaml` / equivalent) for tech stack.
 
-3. **Find existing patterns** — This is the most important step. Search for how the project has solved similar problems before:
-   - If deciding on feature decomposition → look at how existing features are organized (by layer? by domain? by user flow?)
-   - If choosing a library/approach → search for existing usage (`Grep` for import statements, config files)
-   - If deciding on file structure → examine 2-3 existing feature directories as reference
+3. **Find existing patterns** — This is the most important step. Search for how the project has solved similar problems before. Look at how existing features are organized, search for existing library usage (`Grep` for imports, config files), and examine 2-3 feature directories as reference.
 
 4. **Assess and recommend** — The strongest signal is consistency with what the project already does. A codebase that organizes by domain should keep organizing by domain. Only recommend diverging when there's a concrete reason (e.g., existing pattern has caused documented problems).
 
