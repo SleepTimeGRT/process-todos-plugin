@@ -33,9 +33,11 @@ Before generating todos, invoke `/superpowers:brainstorming` to deeply explore t
 - What existing code will be affected?
 - Are there architectural decisions that should be made upfront?
 
-**Making decisions during brainstorming:** When brainstorming presents multiple approaches and a choice needs to be made, spawn a `todo-analyst` agent (`Agent(subagent_type="process-todos:todo-analyst", prompt=<decision question with options>)`). The analyst examines the codebase — existing patterns, conventions, dependencies — and returns a grounded recommendation. Use the analyst's recommendation to move brainstorming forward without blocking on the user for every decision.
+**Making decisions during brainstorming:** When brainstorming presents multiple approaches and a choice needs to be made, spawn a `todo-analyst` agent (`Agent(subagent_type="process-todos:todo-analyst", prompt=<decision question with options>)`). The analyst examines the codebase — existing patterns, conventions, dependencies — and returns a grounded recommendation. The analyst's primary value is **preventing bad technology assumptions** based on codebase evidence. For example, it might discover that the project has no TypeScript runtime, making a suggested library physically impossible — an insight that saves the worker from hitting a dead end. Use the analyst's recommendation to move brainstorming forward without blocking on the user for every decision.
 
 **If brainstorming skill is unavailable** (e.g., running in a subagent without installed skills): perform the decomposition analysis yourself. Cover the same ground — major components, dependencies, affected code, architectural decisions — by reading the codebase directly. The structure matters more than having the brainstorming skill specifically.
+
+**If todo-analyst agent is unavailable** (e.g., outside the Claude Code plugin runtime): follow the analysis procedure in `agents/todo-analyst.md` directly. The 4-step procedure (parse decision → read project context → find existing patterns → assess) works identically whether run by the agent or performed manually.
 
 After brainstorming, build further context:
 1. Read the project's `CLAUDE.md` (if it exists) to understand conventions, tech stack, and project structure
