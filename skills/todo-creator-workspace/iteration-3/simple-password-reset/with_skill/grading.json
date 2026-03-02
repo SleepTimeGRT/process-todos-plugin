@@ -1,0 +1,42 @@
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-with_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "type": "baseline",
+      "passed": false,
+      "evidence": "Three todo files were created (01-reset-token-model.md, 02-forgot-password-api.md, 03-forgot-password-ui.md), exceeding the 1-2 file limit for a simple feature. Password reset is a common feature that could be organized into 1-2 files rather than split across three separate ones."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "All three files reference specific file paths throughout. Examples: 'src/lib/auth/reset-token.ts', 'src/app/api/auth/forgot-password/route.ts', 'src/app/api/auth/reset-password/route.ts', 'src/lib/email/send-reset-email.ts', 'src/components/auth/LoginForm.tsx', 'src/app/forgot-password/page.tsx', 'src/app/reset-password/page.tsx'."
+    },
+    {
+      "text": "correct-markdown-format",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "All three files have: an H1 title (e.g., '# Create Password Reset Token Data Model'), a context paragraph in Korean describing the purpose, and multiple checklist items using '- [ ]' format."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Items specify exact function signatures (e.g., 'Implement createResetToken(userId: string): Promise<string>'), field names ('id, userId, token (hashed), expiresAt, usedAt, createdAt'), HTTP status codes ('return 200 OK', 'return 400'), and UI text strings ('비밀번호 찾기', '재설정 링크 보내기'). No vague directives present."
+    },
+    {
+      "text": "includes-test-specifications",
+      "type": "discriminating",
+      "passed": true,
+      "evidence": "File 01 specifies test file 'src/lib/auth/__tests__/reset-token.test.ts' with 4 named scenarios: (a) creates valid token, (b) returns invalid for expired token (mock date), (c) returns invalid for already-used token, (d) returns invalid for unknown token. File 02 specifies 'src/app/api/auth/__tests__/forgot-password.test.ts' with 5 scenarios including 'returns 200 for unknown email without leaking existence' and 'token cannot be reused'."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "type": "discriminating",
+      "passed": true,
+      "evidence": "File 02's context paragraph explicitly states the email enumeration prevention assumption: '이메일 주소 존재 여부를 응답에 노출하지 않아야 합니다(보안상 항상 동일한 응답)' — matching the example 'prevents email enumeration by always returning 200'. File 01 explicitly states tokens are single-use and expire in 1 hour. File 02 also notes 'check project for nodemailer / Resend / SendGrid setup' rather than assuming a specific email provider."
+    }
+  ]
+}

@@ -1,0 +1,567 @@
+{
+  "metadata": {
+    "skill_name": "todo-creator",
+    "skill_path": "/Users/minchul/Workspace/process-todos-plugin/skills/todo-creator",
+    "executor_model": "claude-sonnet",
+    "grader_model": "claude-sonnet",
+    "timestamp": "2026-03-02T19:54:14Z",
+    "iteration": 3,
+    "previous_iteration": "iteration-2",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.833,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "baseline_passed": 3,
+        "baseline_total": 4,
+        "discriminating_passed": 2,
+        "discriminating_total": 2,
+        "time_seconds": 50.8,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "appropriate-file-count",
+          "type": "baseline",
+          "passed": false,
+          "evidence": "Three todo files were created (01-reset-token-model.md, 02-forgot-password-api.md, 03-forgot-password-ui.md), exceeding the 1-2 file limit for a simple feature. Password reset is a common feature that could be organized into 1-2 files rather than split across three separate ones."
+        },
+        {
+          "text": "checklist-has-file-paths",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "All three files reference specific file paths throughout. Examples: 'src/lib/auth/reset-token.ts', 'src/app/api/auth/forgot-password/route.ts', 'src/app/api/auth/reset-password/route.ts', 'src/lib/email/send-reset-email.ts', 'src/components/auth/LoginForm.tsx', 'src/app/forgot-password/page.tsx', 'src/app/reset-password/page.tsx'."
+        },
+        {
+          "text": "correct-markdown-format",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "All three files have: an H1 title (e.g., '# Create Password Reset Token Data Model'), a context paragraph in Korean describing the purpose, and multiple checklist items using '- [ ]' format."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items specify exact function signatures (e.g., 'Implement createResetToken(userId: string): Promise<string>'), field names ('id, userId, token (hashed), expiresAt, usedAt, createdAt'), HTTP status codes ('return 200 OK', 'return 400'), and UI text strings ('비밀번호 찾기', '재설정 링크 보내기'). No vague directives present."
+        },
+        {
+          "text": "includes-test-specifications",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 01 specifies test file 'src/lib/auth/__tests__/reset-token.test.ts' with 4 named scenarios: (a) creates valid token, (b) returns invalid for expired token (mock date), (c) returns invalid for already-used token, (d) returns invalid for unknown token. File 02 specifies 'src/app/api/auth/__tests__/forgot-password.test.ts' with 5 scenarios including 'returns 200 for unknown email without leaking existence' and 'token cannot be reused'."
+        },
+        {
+          "text": "documents-design-assumptions",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 02's context paragraph explicitly states the email enumeration prevention assumption: '이메일 주소 존재 여부를 응답에 노출하지 않아야 합니다(보안상 항상 동일한 응답)' — matching the example 'prevents email enumeration by always returning 200'. File 01 explicitly states tokens are single-use and expire in 1 hour. File 02 also notes 'check project for nodemailer / Resend / SendGrid setup' rather than assuming a specific email provider."
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "baseline_passed": 0,
+        "baseline_total": 0,
+        "discriminating_passed": 0,
+        "discriminating_total": 0,
+        "time_seconds": 34.7,
+        "errors": 1
+      },
+      "expectations": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.875,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 3,
+        "discriminating_total": 4,
+        "time_seconds": 76.4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "concern-based-split",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Files are split by clear logical concerns: 01 covers backend profile read/nickname API, 02 covers backend avatar upload, 03 covers backend password change, and 04 covers the entire frontend. Each file maps to a cohesive domain, not an arbitrary split. File 04 explicitly states '01~03 번 todo의 API가 완성된 후 진행하세요' showing intentional concern boundaries."
+        },
+        {
+          "text": "dependency-ordering",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Files use numbered prefixes 01–04 that reflect execution order. File 01 establishes schema and auth middleware that 02 and 03 depend on. File 04 explicitly states it depends on 01–03: '01~03 번 todo의 API가 완성된 후 진행하세요'. The ordering correctly encodes the dependency chain."
+        },
+        {
+          "text": "context-paragraph-present",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Every file has a context paragraph and an Assumption block. E.g., file 01: '이 엔드포인트들은 프론트엔드 프로필 페이지의 기반이 되며, 이후 아바타 업로드·비밀번호 변경 API가 동일한 auth 미들웨어와 사용자 타입을 공유합니다.' File 02: '이미지 검증·리사이징 후 저장하고, 저장된 URL을 사용자 레코드에 반영합니다.' Each explains WHY and HOW the work fits."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items are specific and actionable with file paths, commands, and implementation details. E.g., 'prisma/schema.prisma의 User 모델에 nickname String?과 avatarUrl String? 필드 추가 후 npx prisma migrate dev --name add-user-profile-fields 실행', 'src/lib/upload.ts에 multer 설정 구현: 허용 MIME 타입(image/jpeg, image/png, image/webp), 최대 파일 크기 5MB, 메모리 스토리지(memoryStorage) 사용'. Sufficient detail for a worker agent."
+        },
+        {
+          "text": "separates-data-layer",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "Schema/model changes are included in file 01 alongside API route implementation. The item 'prisma/schema.prisma의 User 모델에 nickname String?과 avatarUrl String? 필드 추가 후 npx prisma migrate dev' is the first checklist item in 01-backend-profile-api.md, which also contains GET/PATCH route implementations. There is no dedicated todo file for DB schema changes."
+        },
+        {
+          "text": "includes-test-specifications",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Multiple files include full test file paths and named scenarios. File 01: 'src/routes/__tests__/users.test.ts 작성: (a) 인증된 사용자가 프로필 조회 성공, (b) 인증 토큰 없을 때 401 반환, (c) 닉네임 변경 성공, (d) 중복 닉네임으로 409 반환, (e) 20자 초과 닉네임으로 400 반환'. File 02: 'src/routes/__tests__/avatar.test.ts 작성: (a)~(d)'. File 04: 'src/components/profile/__tests__/NicknameForm.test.tsx' and 'src/components/profile/__tests__/PasswordChangeForm.test.tsx' with named scenarios. Full paths and 2+ specific scenarios are present throughout."
+        },
+        {
+          "text": "documents-design-assumptions",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Every file has an explicit Assumption block. File 01: 'JWT 기반 인증, Express + TypeScript 백엔드, ORM은 Prisma 사용 가정. DB 스키마에 users 테이블이 이미 존재하나 nickname, avatarUrl 컬럼은 이번 작업에서 추가.' File 02: '파일 저장은 로컬 public/uploads/avatars/에 저장 (외부 스토리지 서비스 미사용). 이미지 처리는 sharp 라이브러리 사용.' File 04: 'React + TypeScript, React Query(TanStack Query)로 서버 상태 관리'. Architectural assumptions are stated explicitly."
+        },
+        {
+          "text": "specifies-component-props",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 04 specifies prop interfaces for AvatarUpload: 'props { currentAvatarUrl: string | null, onSuccess: (newUrl: string) => void }'. NicknameForm and PasswordChangeForm checklist items describe their behavior but do not explicitly declare prop interfaces. At least one component has a clearly specified TypeScript prop interface with types."
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.000,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 4,
+        "discriminating_total": 4,
+        "time_seconds": 94.2,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "concern-based-split",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Files are split by clear logical concerns: 01=DB schema, 02=backend API endpoints, 03=avatar upload UI component, 04=nickname/password settings UI forms, 05=page integration & routing. No arbitrary splits — each file maps to a distinct architectural layer or feature domain."
+        },
+        {
+          "text": "dependency-ordering",
+          "description": "Files use numbered prefixes that reflect execution order when dependencies exist",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Numbered prefixes 01–05 reflect execution order. File 01 explicitly states '이 스키마 변경은 이후 API 엔드포인트와 프론트엔드 작업의 기반이 되므로 가장 먼저 완료되어야 한다.' File 05 explicitly references components from 03 and 04: '앞서 구현한 AvatarUpload, NicknameForm, PasswordChangeForm 컴포넌트를 하나의 프로필 페이지로 조합하고'."
+        },
+        {
+          "text": "context-paragraph-present",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "All 5 files have opening context paragraphs explaining WHY and HOW. Examples: 01 — '이 스키마 변경은 이후 API 엔드포인트와 프론트엔드 작업의 기반이 되므로 가장 먼저 완료되어야 한다'; 02 — '모든 엔드포인트는 인증된 사용자만 접근 가능하며, 자신의 정보만 수정할 수 있다'; 04 — '각 폼은 독립적으로 제출되며, 실시간 유효성 검증과 명확한 피드백을 제공한다'."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items include specific file paths, column definitions, HTTP status codes, validation rules, and response shapes. E.g., 'avatar_url VARCHAR(500) DEFAULT NULL 컬럼 추가하는 마이그레이션 파일 작성 (예: migrations/YYYYMMDD_add_user_profile_fields.sql)', 'multer … 허용 타입 image/jpeg, image/png, image/webp, 최대 파일 크기 5MB, 저장 경로 public/uploads/avatars/, 파일명 {userId}-{timestamp}.{ext}'."
+        },
+        {
+          "text": "separates-data-layer",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 01 (01-db-schema.md) is dedicated entirely to DB schema migrations and model type updates (avatar_url, nickname columns, User model fields). File 02 (02-profile-api-endpoints.md) covers only API route implementation. No schema DDL appears in the API file, and no route code appears in the schema file."
+        },
+        {
+          "text": "includes-test-specifications",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Multiple files include full test file paths with 2+ named scenarios. 02 specifies 'src/__tests__/profile-api.test.ts' with 5 scenarios including '5MB 초과 파일 413', '닉네임 중복 409', '현재 비밀번호 틀림 401'. 03 specifies 'src/components/profile/__tests__/AvatarUpload.test.tsx' with 3 scenarios. 04 specifies 'src/components/profile/__tests__/ProfileForms.test.tsx' with 4 scenarios. 05 specifies 'src/__tests__/ProfilePage.integration.test.tsx' with 3 scenarios."
+        },
+        {
+          "text": "documents-design-assumptions",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 01 states '로컬 public/uploads/avatars/ 디렉토리 사용을 기본으로 가정' and discusses nickname uniqueness trade-offs: '고유하면 더 명확하지만 변경 시 충돌 처리 필요'. File 02 explicitly states '로컬 스토리지에 저장하는 것을 기본으로 가정한다'. These are architectural assumptions about storage strategy documented in the context paragraphs."
+        },
+        {
+          "text": "specifies-component-props",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 03 specifies 'props { currentAvatarUrl: string | null, onSuccess: (newUrl: string) => void, userId: string }' for AvatarUpload. File 04 specifies 'props { currentNickname: string | null, onSuccess: (nickname: string) => void }' for NicknameForm and 'props { onSuccess: () => void }' for PasswordChangeForm — all with TypeScript-typed prop interfaces."
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.000,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 4,
+        "discriminating_total": 4,
+        "time_seconds": 140.9,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "tech-decision-documented",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "In 01-db-schema-and-types.md, the context paragraph explicitly states: 'WebSocket is chosen over SSE because chat requires bidirectional communication: SSE only handles server→client pushes, requiring a separate HTTP channel for sending. WebSocket handles both directions on a single persistent connection.'"
+        },
+        {
+          "text": "concern-based-decomposition",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "The five files map cleanly to distinct concerns: 01 = data model + types, 02 = real-time server infrastructure, 03 = REST API, 04 = client-side state and WS connection, 05 = UI components. No file is split arbitrarily by size; each represents a coherent layer."
+        },
+        {
+          "text": "allows-large-cohesive-todos",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Tightly coupled items are grouped: 01 keeps DB schema and all TypeScript type definitions together; 02 keeps connection-manager, ws-server, and ws-handlers in one todo; 04 keeps ws-client, chatStore, useChat, and useConversationMessages together. No artificial splitting of related concerns."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items specify exact file paths (e.g. 'Create `src/lib/chat/connection-manager.ts`'), exact SQL column definitions ('id UUID PK DEFAULT gen_random_uuid()'), specific function signatures ('add(userId: string, ws: WebSocket): void'), and specific behavior ('exponential backoff, max 5 retries'). No vague directives like 'add authentication' without detail."
+        },
+        {
+          "text": "separates-state-from-ui",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 04 is entirely dedicated to client-side state: ws-client.ts (WS lifecycle), chatStore.ts (Zustand/Redux state shape with full ChatState interface), useChat.ts hook, and useConversationMessages.ts hook. File 05 is entirely UI components (ChatPanel, ConversationList, MessageThread, etc.) that consume state from the hooks in 04. The split is explicit: '05 Consumes state from the hooks in todo #4.'"
+        },
+        {
+          "text": "includes-test-specifications",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Multiple todos include explicit full test file paths and 2+ named scenarios: 01 specifies 'src/lib/chat/__tests__/types.test.ts' with scenarios (a) WsServerEvent union exhaustiveness and (b) getReadBy derivation; 02 specifies 'src/lib/chat/__tests__/ws-handlers.test.ts' with 4 named scenarios including 'handleSendMessage rejects if user is not a participant' and 'typing indicator auto-stops after 3 seconds'; 03 specifies 'src/routes/__tests__/chat.test.ts' with 4 scenarios; 04 specifies 'src/hooks/__tests__/useChat.test.ts' with 4 scenarios including 'optimistic message is replaced (not duplicated) when server confirms'."
+        },
+        {
+          "text": "documents-design-assumptions",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Every todo file contains a context paragraph with architectural assumptions: 01 documents 'last_read_at approach on participants instead of per-message read receipts — O(1) to check rather than O(n messages)'; 02 documents 'one user can have multiple tabs, so we store Map<userId, Set<WebSocket>>' and 'Typing indicators are NOT persisted to DB'; 03 documents cursor-based pagination 'prevents the shifting results problem'; 04 documents 'Single WebSocket connection per user session' and optimistic update confirmation strategy."
+        },
+        {
+          "text": "specifies-type-definitions",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "File 01 includes full inline TypeScript type definitions: Conversation, ConversationParticipant, Message interfaces with exact field types, plus complete WsServerEvent and WsClientEvent discriminated unions in ws-types.ts with 10 server event variants and 5 client event variants. File 04 includes the full ChatState interface inline with Map/Set generics. These are definitions, not just references to framework names."
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "baseline_passed": 0,
+        "baseline_total": 0,
+        "discriminating_passed": 0,
+        "discriminating_total": 0,
+        "time_seconds": 49.1,
+        "errors": 1
+      },
+      "expectations": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "trivial-typo-fix",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.000,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "baseline_passed": 3,
+        "baseline_total": 3,
+        "discriminating_passed": 3,
+        "discriminating_total": 3,
+        "time_seconds": 12.0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "single-file-output",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Exactly one file is present: '01-fix-header-typo.md'. No additional files were created."
+        },
+        {
+          "text": "correct-markdown-format",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "File contains an H1 title ('# Fix typo in header component: \\'설젇\\' → \\'설정\\''), a brief context sentence, and one checklist item using '- [ ]' format."
+        },
+        {
+          "text": "minimal-checklist-items",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "The file contains exactly 1 checklist item: '- [ ] Search for \\'설젇\\' in the header component file...' — well within the 1-3 item limit for a trivial fix."
+        },
+        {
+          "text": "no-multi-file-split",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "Only one file exists (01-fix-header-typo.md). There are no separate files for investigation, fix, or testing phases."
+        },
+        {
+          "text": "no-brainstorming-artifacts",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "The file contains no brainstorming output, architectural analysis, or design-decision documentation. It has only a one-sentence context description and a single action item."
+        },
+        {
+          "text": "scope-proportional-to-request",
+          "type": "discriminating",
+          "passed": true,
+          "evidence": "The sole checklist item is strictly scoped to finding and replacing the typo. No test specifications, type definitions, component refactors, or i18n considerations are mentioned."
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "trivial-typo-fix",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "baseline_passed": 0,
+        "baseline_total": 0,
+        "discriminating_passed": 0,
+        "discriminating_total": 0,
+        "time_seconds": 19.7,
+        "errors": 1
+      },
+      "expectations": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "meta-project-plugin-feature",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.500,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "baseline_passed": 3,
+        "baseline_total": 3,
+        "discriminating_passed": 0,
+        "discriminating_total": 3,
+        "time_seconds": 55.6,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "appropriate-file-count",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Two files are present: '01-define-config-schema.md' (schema definition) and '02-integrate-validation-and-error-reporting.md' (integration). Two falls within the required 2-3 range."
+        },
+        {
+          "text": "correct-markdown-format",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "File 01 opens with '# Define Zod Schema for .process-todos.json', has a multi-sentence context paragraph, and contains multiple '- [ ]' checklist items. File 02 opens with '# Wire Validation into Config Reading with Clear Error Messages', has a context paragraph, and contains '- [ ]' items throughout."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items specify exact file paths ('Create `schemas/process-todos-config.ts`'), exact API calls ('Use `z.object({ ... }).strict()`', 'Run `ProcessTodosConfigSchema.safeParse(raw)`'), exact error message strings ('❌ .process-todos.json contains invalid JSON: ...'), and named test cases with lettered sub-items (a–f). No vague directives like 'add validation' appear."
+        },
+        {
+          "text": "references-project-artifacts",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "Both files create and reference new TypeScript paths that don't exist in the project: 'schemas/process-todos-config.ts', 'lib/load-config.ts', 'schemas/__tests__/process-todos-config.test.ts', 'lib/__tests__/load-config.test.ts'. The only actual project artifact referenced is '.process-todos.json'. Neither file references SKILL.md files, agents/*.md, or plugin.json — the real artifacts of this markdown/JSON plugin."
+        },
+        {
+          "text": "adapts-to-non-code-project",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "Both files assume a full TypeScript/npm runtime. File 01 references Zod ('z.string().min(1)', 'z.infer<typeof ProcessTodosConfigSchema>'), TypeScript types, and a compile step — the only hedge is '(or `.js` if the plugin has no TS build step)', which still assumes a JS runtime. File 02 assumes `lib/load-config.ts`, `safeParse`, and typed returns. Neither context paragraph acknowledges that this is a markdown/JSON plugin with no compiled runtime, and neither suggests alternatives like JSON Schema comments, instruction-level validation in SKILL.md, or agent-prompt guards."
+        },
+        {
+          "text": "includes-validation-approach",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "File 01 specifies Zod as the mechanism ('z.object({ ... }).strict()', 'safeParse') and File 02 details the error-formatting flow in depth. However, the assertion requires explaining HOW validation works in a project WITHOUT a code runtime. Both files assume Zod and TypeScript compilation exist, which is not true for this markdown/JSON plugin. No alternative mechanism (e.g., validation via agent instructions, JSON Schema linting in CI, human-readable field documentation in SKILL.md) is described or reasoned about."
+        }
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "meta-project-plugin-feature",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.333,
+        "passed": 2,
+        "failed": 4,
+        "total": 6,
+        "baseline_passed": 2,
+        "baseline_total": 3,
+        "discriminating_passed": 0,
+        "discriminating_total": 3,
+        "time_seconds": 47.2,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "appropriate-file-count",
+          "type": "baseline",
+          "passed": false,
+          "evidence": "Five todo files were created (01 through 05), exceeding the expected 2-3. The files cover research, schema definition, integration, error messages, and tests — that is 5 distinct files rather than the expected 2-3 (schema definition, integration, polish)."
+        },
+        {
+          "text": "correct-markdown-format",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "All five files have an H1 title (e.g., '# Research: Validation 접근법 결정', '# Config Schema 정의'), a context paragraph immediately following the title, and checklist items using '- [ ]' format. Format is consistent across all files."
+        },
+        {
+          "text": "checklist-items-are-concrete",
+          "type": "baseline",
+          "passed": true,
+          "evidence": "Items describe specific actions with tooling hints: '현재 `.process-todos.json`을 읽는 코드 위치를 찾는다 (Grep으로 `process-todos.json` 검색)', 'Zod/JSON Schema의 에러 객체에서 필드 경로와 메시지를 추출하는 포매터 함수 작성', 'JSON.parse 이후, 스키마 검증 호출을 삽입한다'. No item is merely 'add validation' without specifics."
+        },
+        {
+          "text": "references-project-artifacts",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "Files repeatedly reference TypeScript paths and constructs instead of actual plugin artifacts. File 02 says 'config 스키마 파일 생성 (예: `src/config-schema.ts`)' and uses '`z.infer<typeof Schema>`'. File 01 references 'package.json'와 TypeScript 설정'. No file references SKILL.md, agents/*.md, or plugin.json. While '.process-todos.json' is mentioned, the dominant artifact references are src/ TypeScript files."
+        },
+        {
+          "text": "adapts-to-non-code-project",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "Files explicitly assume a TypeScript/Node.js runtime. File 01 states 'Claude Code 플러그인은 Node.js/TypeScript 환경에서 실행되므로 런타임 의존성 추가 여부도 고려해야 한다' — treating it as a compiled code project. File 02 creates 'src/config-schema.ts' and exports TypeScript types via 'z.infer'. No file acknowledges the plugin is markdown/JSON-based with no compiled runtime, nor adapts recommendations accordingly."
+        },
+        {
+          "text": "includes-validation-approach",
+          "type": "discriminating",
+          "passed": false,
+          "evidence": "File 01 mentions 'Zod 또는 JSON Schema 중 선택 결정' with reasoning (check if zod already exists), and File 03 says 'JSON.parse 이후, 스키마 검증 호출을 삽입한다'. However, both explanations assume a code runtime exists. No file addresses HOW validation works when there is no TypeScript/Node.js runtime — e.g., validation via skill instructions, JSON Schema in plugin.json, or documentation-level constraints."
+        }
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "overall_pass_rate": {
+        "mean": 0.842,
+        "stddev": 0.205,
+        "min": 0.500,
+        "max": 1.000
+      },
+      "baseline_pass_rate": {
+        "mean": 0.95,
+        "stddev": 0.112,
+        "min": 0.75,
+        "max": 1
+      },
+      "discriminating_pass_rate": {
+        "mean": 0.75,
+        "stddev": 0.433,
+        "min": 0,
+        "max": 1
+      },
+      "time_seconds": {
+        "mean": 67.1,
+        "stddev": 47.3,
+        "min": 12.0,
+        "max": 140.9
+      }
+    },
+    "without_skill": {
+      "overall_pass_rate": {
+        "mean": 0.267,
+        "stddev": 0.435,
+        "min": 0,
+        "max": 1.000
+      },
+      "baseline_pass_rate": {
+        "mean": 0.333,
+        "stddev": 0.471,
+        "min": 0,
+        "max": 1
+      },
+      "discriminating_pass_rate": {
+        "mean": 0.2,
+        "stddev": 0.447,
+        "min": 0,
+        "max": 1
+      },
+      "time_seconds": {
+        "mean": 49,
+        "stddev": 27.9,
+        "min": 19.7,
+        "max": 94.2
+      }
+    },
+    "delta": {
+      "overall_pass_rate": "+0.575",
+      "baseline_pass_rate": "+0.617",
+      "discriminating_pass_rate": "+0.55",
+      "time_seconds": "+18.1"
+    }
+  }
+}

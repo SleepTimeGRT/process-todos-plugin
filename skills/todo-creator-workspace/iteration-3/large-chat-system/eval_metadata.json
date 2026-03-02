@@ -1,0 +1,43 @@
+{
+  "eval_id": 3,
+  "eval_name": "large-chat-system",
+  "prompt": "우리 앱에 실시간 채팅 시스템 추가해줘. 1:1 채팅이랑 그룹 채팅 둘 다 필요하고, 읽음 표시도 있으면 좋겠어. WebSocket 쓸지 SSE 쓸지는 알아서 결정해줘.",
+  "assertions": {
+    "baseline": [
+      {
+        "name": "tech-decision-documented",
+        "description": "The WebSocket vs SSE decision is explicitly documented in the todo context with reasoning"
+      },
+      {
+        "name": "concern-based-decomposition",
+        "description": "Feature is decomposed by concern (data model, real-time infra, API, UI) not artificially size-limited"
+      },
+      {
+        "name": "allows-large-cohesive-todos",
+        "description": "Tightly coupled items are kept in the same todo rather than over-split (leveraging handoff)"
+      },
+      {
+        "name": "checklist-items-are-concrete",
+        "description": "Each checklist item describes a specific implementable action, not vague directives"
+      }
+    ],
+    "discriminating": [
+      {
+        "name": "separates-state-from-ui",
+        "description": "Client-side state management (stores, hooks, WS connection) is in a dedicated todo, separate from UI component rendering"
+      },
+      {
+        "name": "includes-test-specifications",
+        "description": "At least one todo includes explicit test file paths with full paths (e.g., 'src/lib/__tests__/chat.test.ts', 'src/__tests__/ws-connection.test.ts') — not just framework names like 'vitest' or 'jest' — and describes 2+ specific named test scenarios (e.g., 'reconnects automatically after server disconnect', 'marks messages as read only for active chat room')"
+      },
+      {
+        "name": "documents-design-assumptions",
+        "description": "Context paragraphs state architectural assumptions (e.g., read-tracking strategy, reconnection policy)"
+      },
+      {
+        "name": "specifies-type-definitions",
+        "description": "Includes explicit TypeScript type/interface definitions or references (e.g., WsServerEvent discriminated union, Zod schemas)"
+      }
+    ]
+  }
+}

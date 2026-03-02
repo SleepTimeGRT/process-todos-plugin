@@ -1,0 +1,56 @@
+```json
+{
+  "eval_id": 3,
+  "run_id": "large-chat-system-without_skill",
+  "expectations": [
+    {
+      "text": "tech-decision-documented",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "01-websocket-infrastructure.md opens with an explicit rationale paragraph: 'WebSocket을 선택한 이유: 채팅은 클라이언트↔서버 간 양방향 통신이 필수입니다. SSE는 서버→클라이언트 단방향이라 메시지 전송 시 별도 HTTP 요청이 필요하여 채팅에 적합하지 않습니다.' The reasoning covers why SSE was rejected and why WebSocket is preferred."
+    },
+    {
+      "text": "concern-based-decomposition",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Six files map to distinct concerns: 01 = real-time infrastructure, 02 = database/data model, 03 = DM feature/API, 04 = group chat feature/API, 05 = read receipts cross-cutting concern, 06 = frontend UI. Decomposition follows technical layers and domain features rather than arbitrary size limits."
+    },
+    {
+      "text": "allows-large-cohesive-todos",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Tightly related items are kept together. For example, 02-database-schema.md keeps all table creation, indexing, soft-delete, and partitioning strategy in one file. 04-group-chat.md bundles membership management APIs, broadcast logic, push notifications, and system messages together rather than splitting them into separate files."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Items include specific route paths, field names, and behavior details. Examples: '`conversations` 테이블 생성 (id, type: 'direct'|'group', name, created_at)', 'POST /conversations/direct', 'GET /conversations/:id/messages?cursor=', '`(message_id, user_id)` 유니크 인덱스 추가'. No vague directives like 'handle errors' or 'improve performance' without specifics."
+    },
+    {
+      "text": "separates-state-from-ui",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "06-frontend-chat-ui.md conflates client-side state management with UI rendering in a single file. It contains 'WebSocket 클라이언트 연결 관리 훅/서비스 구현 (인증 토큰 자동 첨부)' alongside 'UI구현' items like '대화 목록 화면 구현' and '채팅방 화면 구현'. There is no dedicated todo for stores, hooks, and WS connection management separate from UI component rendering."
+    },
+    {
+      "text": "includes-test-specifications",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "None of the six files mention test file paths, testing frameworks, or named test scenarios. There are no entries resembling 'src/lib/__tests__/chat.test.ts' or scenario descriptions like 'reconnects automatically after server disconnect'. Testing is entirely absent from all todos."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "type": "discriminating",
+      "passed": true,
+      "evidence": "Context paragraphs state several architectural assumptions: 02 states the unified conversation model assumption ('1:1 채팅과 그룹 채팅을 통합된 `conversation` 모델로 관리'), 03 states uniqueness assumption ('대화방은 두 사용자 조합으로 유일하게 식별되며, 이미 존재하는 대화방은 재사용합니다'), and 05 states the read-tracking strategy ('1:1 채팅에서는 "읽음" 표시, 그룹 채팅에서는 읽은 인원 수를 보여줍니다'). Reconnection policy (exponential backoff) appears as a checklist item rather than a context assumption."
+    },
+    {
+      "text": "specifies-type-definitions",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "No TypeScript interfaces, discriminated unions, or Zod schemas are referenced in any file. The inline notation 'type: 'direct'|'group'' and 'role: 'admin'|'member'' in 02-database-schema.md are column value descriptions within SQL table definitions, not TypeScript type references. There is no mention of WsServerEvent unions, message payload types, or schema validation definitions."
+    }
+  ]
+}
+```

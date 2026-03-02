@@ -1,0 +1,35 @@
+{
+  "eval_id": 4,
+  "eval_name": "trivial-typo-fix",
+  "prompt": "헤더 컴포넌트에 오타가 있어서 '설정' 이 '설젇' 으로 표시돼. 수정해줘.",
+  "assertions": {
+    "baseline": [
+      {
+        "name": "single-file-output",
+        "description": "Creates exactly 1 todo file — a single typo fix must not be split into multiple todos"
+      },
+      {
+        "name": "correct-markdown-format",
+        "description": "The file has an H1 title, an optional brief context sentence, and a checklist with '- [ ]' items"
+      },
+      {
+        "name": "minimal-checklist-items",
+        "description": "Contains 1-3 checklist items total — proportional to the trivial scope of fixing a typo"
+      }
+    ],
+    "discriminating": [
+      {
+        "name": "no-multi-file-split",
+        "description": "Does NOT create multiple todo files (e.g., separate files for 'investigation', 'fix', 'testing') — a typo fix belongs in a single file"
+      },
+      {
+        "name": "no-brainstorming-artifacts",
+        "description": "Does NOT include brainstorming output, architectural analysis, or design-decision documentation — these are disproportionate for a typo fix"
+      },
+      {
+        "name": "scope-proportional-to-request",
+        "description": "Does NOT add unrelated scope such as test specifications, type definitions, component refactors, or i18n considerations — the output is strictly scoped to the typo correction"
+      }
+    ]
+  }
+}

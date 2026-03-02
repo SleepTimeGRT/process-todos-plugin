@@ -1,0 +1,44 @@
+```json
+{
+  "eval_id": 4,
+  "run_id": "trivial-typo-fix-without_skill",
+  "expectations": [
+    {
+      "text": "single-file-output",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Exactly one file is present: fix-header-typo.md. No additional files were created."
+    },
+    {
+      "text": "correct-markdown-format",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "File has a valid H1 title '# 헤더 컴포넌트 오타 수정', a brief context sentence explaining the typo issue, and two checklist items using the correct '- [ ]' format."
+    },
+    {
+      "text": "minimal-checklist-items",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "The file contains exactly 2 checklist items, which falls within the acceptable 1-3 item range for a trivial task."
+    },
+    {
+      "text": "no-multi-file-split",
+      "type": "discriminating",
+      "passed": true,
+      "evidence": "Only a single file fix-header-typo.md was created. There are no separate files for investigation, fix, or testing phases."
+    },
+    {
+      "text": "no-brainstorming-artifacts",
+      "type": "discriminating",
+      "passed": true,
+      "evidence": "The file contains only a concise problem description and two action items. There is no architectural analysis, design decisions, or brainstorming content."
+    },
+    {
+      "text": "scope-proportional-to-request",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "The second checklist item '동일한 오타가 다른 파일(상수 파일, i18n 파일 등)에도 존재하는지 확인 후 수정' explicitly adds i18n file considerations ('i18n 파일 등') that go beyond the original request to fix a typo in the header component. A proportional response would only address the specific typo location mentioned."
+    }
+  ]
+}
+```

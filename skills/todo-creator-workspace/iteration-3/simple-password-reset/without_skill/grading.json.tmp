@@ -1,0 +1,44 @@
+```json
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-without_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "type": "baseline",
+      "passed": false,
+      "evidence": "5 todo files were created (01 through 05) for what the assertion considers a simple feature requiring only 1-2 files. The work is split into: forgot-password link, forgot-password page, email API, reset page, and reset API — over-segmented for a simple password reset flow."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "type": "baseline",
+      "passed": false,
+      "evidence": "No specific file system paths (e.g., 'src/pages/forgot-password.tsx') or named component identifiers (e.g., 'ForgotPasswordForm') appear in any checklist item. Files reference route paths like '/forgot-password' and API endpoints like 'POST /api/auth/forgot-password', but these are not file paths or component names."
+    },
+    {
+      "text": "correct-markdown-format",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "All 5 files follow the required format: each has an H1 title (e.g., '# 로그인 페이지에 비밀번호 찾기 링크 추가'), a context paragraph immediately after, and checklist items using '- [ ]' syntax throughout."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "type": "baseline",
+      "passed": true,
+      "evidence": "Items are specific and implementable: '토큰을 DB에 저장 (user_id, token, expires_at)', '고유한 재설정 토큰 생성 (crypto 등 사용) 및 만료 시간 설정', 'URL 쿼리 파라미터에서 토큰 추출', '사용된 토큰 DB에서 삭제 또는 무효화 처리 (재사용 방지)'. No vague directives like 'handle security' appear."
+    },
+    {
+      "text": "includes-test-specifications",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "No test file paths are mentioned in any of the 5 files, and no specific test scenarios are described (e.g., no 'validateResetToken returns null for expired token' equivalents). Testing is entirely absent from the todo set."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "type": "discriminating",
+      "passed": false,
+      "evidence": "Context paragraphs do not state architectural assumptions explicitly. Paragraphs are generic descriptions like '토큰을 생성하고 DB에 저장한 뒤 이메일로 전송한다' without naming specific technologies (no ORM, email service, or auth library named). The email enumeration prevention note ('존재하지 않는 이메일 요청 시 보안상 동일한 성공 응답 반환') appears in a checklist item in file 03, not the context paragraph, and no other architectural assumptions are stated anywhere."
+    }
+  ]
+}
+```
