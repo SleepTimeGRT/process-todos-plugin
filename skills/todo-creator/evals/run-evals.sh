@@ -293,7 +293,7 @@ run_agent() {
     start_ns=$(now_ns)
 
     if [[ "$config" == "with_skill" ]]; then
-        claude --print -m "$MODEL" \
+        claude --print --model "$MODEL" \
             --system-prompt "$SKILL_CONTENT" \
             "Generate todo files for this request. Write each todo file as a markdown code block with the filename as the info string (e.g., \`\`\`01-some-file.md). Do NOT use any tools or read any files — just generate the content directly.
 
@@ -304,7 +304,7 @@ Prompt: $case_prompt" \
                 return 1
             }
     else
-        claude --print -m "$MODEL" \
+        claude --print --model "$MODEL" \
             "Generate todo markdown files for this request. Each file should have an H1 title, a context paragraph, and a checklist with '- [ ]' items. Write each as a markdown code block with the filename as the info string (e.g., \`\`\`01-some-file.md). Do NOT use any tools or read any files — just generate the content directly.
 
 Prompt: $case_prompt" \
@@ -443,7 +443,7 @@ if [[ "$DRY_RUN" == true ]]; then
     for idx in "${EVAL_INDICES[@]}"; do
         for config in $CONFIGS; do
             case_name=$(get_case_name "$idx")
-            log "[DRY RUN] claude --print -m $MODEL ... > $ITER_DIR/$case_name/$config/raw_output.md"
+            log "[DRY RUN] claude --print --model $MODEL ... > $ITER_DIR/$case_name/$config/raw_output.md"
         done
     done
 else
@@ -536,7 +536,7 @@ ${fcontent}
     local start_ns
     start_ns=$(now_ns)
 
-    claude --print -m "$MODEL" \
+    claude --print --model "$MODEL" \
         "You are a grading agent for assessing todo file quality. Grade the following todo files against each assertion.
 
 For EACH assertion, output a JSON object with these fields:
@@ -617,7 +617,7 @@ if [[ "$DRY_RUN" == true ]]; then
     for idx in "${EVAL_INDICES[@]}"; do
         for config in $CONFIGS; do
             case_name=$(get_case_name "$idx")
-            log "[DRY RUN] claude --print -m $MODEL (grading) > $ITER_DIR/$case_name/$config/grading.json"
+            log "[DRY RUN] claude --print --model $MODEL (grading) > $ITER_DIR/$case_name/$config/grading.json"
         done
     done
 else
