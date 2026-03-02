@@ -10,7 +10,7 @@ claude plugin add <username>/process-todos-plugin
 
 ## Configuration
 
-Place a `.process-todos.json` file in your project root:
+Create `.process-todos.json` in your project root to customize behavior:
 
 ```json
 {
@@ -21,12 +21,7 @@ Place a `.process-todos.json` file in your project root:
 }
 ```
 
-| Setting | Default | Description |
-|---|---|---|
-| `todo_path` | `docs/todos` | Directory containing todo markdown files |
-| `type_check_command` | `npm run check-types` | Command run before merge to verify code compiles |
-| `branch_prefix` | `todo/` | Git branch prefix for worktree branches |
-| `worker_model` | `null` (system default) | Model for worker agent (e.g., `"sonnet"`, `"opus"`) |
+All fields are optional — defaults shown above.
 
 ## Usage
 
@@ -48,19 +43,9 @@ Place these files as `.md` files inside the configured `todo_path` directory.
 
 ## How It Works
 
-The plugin uses a 3-tier agent system:
+The plugin uses a 3-tier agent orchestration: a lead agent reads todos sequentially, spawns worker agents in isolated git worktrees, and handles handoffs when workers hit context limits. Workers can delegate research to lightweight researcher agents to preserve their own context.
 
-1. **Lead orchestrator** — reads todo files from the configured path, creates a git worktree per todo on a dedicated branch, and spawns a worker agent for each one sequentially.
-
-2. **Worker agents** — run inside the worktree, assess task complexity, and chain skills as needed (brainstorming → planning → executing). When done, they run the type check and merge back to the main branch.
-
-3. **Researcher agents** — spawned by workers to perform web lookups and external research. Kept separate to preserve the worker's context window.
-
-Additional behaviors:
-
-- **Automatic handoff** — if a worker approaches its context limit mid-task, it writes a handoff file and a fresh worker picks up where it left off. Max 3 retries per todo.
-- **Pre-merge type checking** — the configured `type_check_command` is run before merging. If it fails, the worker attempts to fix the issues automatically.
-- **Merge conflict handling** — if a merge conflict occurs, the worktree is preserved and reported for manual resolution.
+Run `/process-todos` to start processing. Use the `todo-creator` skill to generate well-structured todo files from natural language descriptions.
 
 ## Troubleshooting
 
