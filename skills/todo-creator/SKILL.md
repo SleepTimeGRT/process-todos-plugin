@@ -105,7 +105,8 @@ Include file paths when you know where the code should go. The worker benefits e
 - **Component prop interfaces**: For UI todos, specify what props each component accepts. Example: `- [ ] AvatarUpload accepts { currentAvatarUrl: string | null, onSuccess: (newUrl: string) => void }`
 - **Error handling mapping**: When backend returns specific error codes, include how the frontend should display them. Example: `- [ ] On 401, show "현재 비밀번호가 올바르지 않습니다." next to the current-password input`
 - **Design assumptions**: State the assumptions in the context paragraph so the worker knows the boundaries. Example: "File uploads stored locally in public/uploads/ — no external storage service assumed."
-- **Non-code projects** (plugins, config repos, documentation, infrastructure-as-code): Not every project has TypeScript files, API routes, or UI components. When the project's primary artifacts are markdown instructions, JSON/YAML configuration, or infrastructure definitions, reference the project's *actual* artifacts in checklist items (e.g., `skills/process-todos/SKILL.md` instead of `src/lib/...`), adapt "test specifications" to the project's testing reality (validation scripts, linting checks, or manual verification steps rather than unit tests), and don't default to TypeScript/React patterns.
+
+**Non-code projects (plugins, config repos, documentation, infrastructure-as-code):** Not every project has TypeScript files, API routes, or UI components. When the project's primary artifacts are markdown instructions, JSON/YAML configuration, or infrastructure definitions, reference the project's *actual* artifacts in checklist items (e.g., `skills/process-todos/SKILL.md` instead of `src/lib/...`), adapt "test specifications" to the project's testing reality (validation scripts, linting checks, or manual verification steps rather than unit tests), and don't default to TypeScript/React patterns.
 
 ### Step 5 — Present and Confirm
 
