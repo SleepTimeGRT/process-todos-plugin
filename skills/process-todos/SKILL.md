@@ -41,25 +41,11 @@ Maintain a `handoff_count` per todo (starts at 0). For each todo file (one at a 
      - Branch exists: `git worktree add .claude/worktrees/<todo-name> {branch_prefix}<todo-name>`
      - Branch does not exist: `git worktree add .claude/worktrees/<todo-name> -b {branch_prefix}<todo-name>`
 3. Announce: "Processing [N/total]: [filename]"
-4. Build the worker prompt:
+4. Build the worker prompt using this base structure:
 
-**If first attempt (no handoff):**
+**Base template:**
 ```
-Process this todo ticket.
-
-**Config:**
-- type_check_command: {type_check_command}
-- branch_prefix: {branch_prefix}
-
-**Worktree path:** <absolute path to .claude/worktrees/<todo-name>>
-
-## Todo: <filename>
-<full file content>
-```
-
-**If continuing from handoff:**
-```
-Continue this todo ticket from where the previous worker left off.
+{PREAMBLE}
 
 **Config:**
 - type_check_command: {type_check_command}
@@ -70,28 +56,16 @@ Continue this todo ticket from where the previous worker left off.
 ## Todo: <filename>
 <full file content>
 
-## Handoff Context
-<content of .claude/worktrees/<todo-name>/HANDOFF.md>
+{EXTRA_CONTEXT}
 ```
 
-**If fixing type errors (DONE returned but type check failed):**
-```
-Continue this todo ticket — the previous worker completed all checklist items
-but the type check failed. Fix only the type errors below.
-Do not re-implement features or refactor existing work.
+**Preamble and extra context per scenario:**
 
-**Config:**
-- type_check_command: {type_check_command}
-- branch_prefix: {branch_prefix}
-
-**Worktree path:** <absolute path to .claude/worktrees/<todo-name>>
-
-## Todo: <filename>
-<full file content>
-
-## Type Errors
-<full {type_check_command} output>
-```
+| Scenario | Preamble | Extra Context |
+|----------|----------|---------------|
+| First attempt | `Process this todo ticket.` | *(none)* |
+| Handoff continuation | `Continue this todo ticket from where the previous worker left off.` | `## Handoff Context\n<content of .claude/worktrees/<todo-name>/HANDOFF.md>` |
+| Type error fix | `Continue this todo ticket — the previous worker completed all checklist items but the type check failed. Fix only the type errors below. Do not re-implement features or refactor existing work.` | `## Type Errors\n<full {type_check_command} output>` |
 
 5. Spawn worker: `Agent(subagent_type="process-todos:todo-worker", prompt=<built prompt>, mode="dontAsk")`
    - If `worker_model` is set (not null), add `model="{worker_model}"` to the spawn call.
