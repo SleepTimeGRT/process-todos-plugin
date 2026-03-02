@@ -1,0 +1,46 @@
+{
+  "eval_id": 3,
+  "run_id": "large-chat-system-with_skill",
+  "expectations": [
+    {
+      "text": "tech-decision-documented",
+      "passed": true,
+      "evidence": "In 02-websocket-server.md, the opening paragraph explicitly states: 'WebSocket was chosen over SSE because the chat feature requires true bidirectional communication: clients both send messages and receive them, and read-receipt updates must be pushed to all conversation participants immediately. SSE is unidirectional and would require a separate REST call per send, adding complexity and latency.'"
+    },
+    {
+      "text": "concern-based-decomposition",
+      "passed": true,
+      "evidence": "The five todos map to distinct concerns: 01-database-schema.md (data model), 02-websocket-server.md (real-time infrastructure), 03-rest-api-routes.md (REST API), 04-client-state.md (client-side state management), 05-chat-ui.md (UI components). Each todo focuses on a single architectural concern rather than being split by arbitrary size."
+    },
+    {
+      "text": "allows-large-cohesive-todos",
+      "passed": true,
+      "evidence": "Todo 02-websocket-server.md keeps all WebSocket concerns together: protocol definition in events.ts, socket-handler.ts implementation, server.ts setup, and related tests — all in one todo. Similarly, 04-client-state.md keeps the Zustand store, useChat hook, useChatHistory hook, and useConversations hook together rather than splitting each hook into its own todo."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Checklist items describe specific implementable actions with file paths and exact details. For example: 'Create `src/app/api/chat/conversations/route.ts`: GET — return the authenticated user's conversations, ordered by the `createdAt` of the latest message...' and 'Run `npx prisma migrate dev --name add_chat_system` to generate and apply the migration'. Each item names files, commands, or specific behaviors."
+    },
+    {
+      "text": "separates-state-from-ui",
+      "passed": true,
+      "evidence": "Client-side state is entirely in 04-client-state.md ('Implement Client-Side State Layer for Chat (Store + WebSocket Hook)'), covering the Zustand store in `src/stores/chatStore.ts`, `useChat.ts`, `useChatHistory.ts`, and `useConversations.ts`. UI rendering is in a completely separate todo 05-chat-ui.md. The context in 04 explicitly states: 'This layer is independently testable and can be developed before the UI components exist.'"
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": true,
+      "evidence": "Multiple todos include specific test file paths and named scenarios. For example, 02-websocket-server.md specifies tests in `src/__tests__/chat/socket-handler.test.ts` with scenarios like 'Unauthenticated socket receives `chat:error { code: UNAUTHORIZED }` and is disconnected' and '`chat:send` with content > 2000 chars emits `chat:error { code: MESSAGE_TOO_LONG }` and does not persist'. Similar specificity appears in 01, 03, 04, and 05."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": true,
+      "evidence": "Each todo's context paragraph states architectural assumptions explicitly. Examples: 01-database-schema.md: 'read receipts are tracked per-member per-conversation (storing the last-read message ID rather than a boolean per message, which scales better)'; 02-websocket-server.md: 'the WebSocket server runs as a Next.js custom server in `server.ts`, not as an API route, because Next.js API routes do not support persistent connections'; 03-rest-api-routes.md: 'Cursor-based pagination (using `messageId` as the cursor) is used for message history instead of offset pagination to remain stable under concurrent inserts'; 04-client-state.md: 'Zustand is used (not Redux) for local chat state because the store shape is simple and co-located mutation is ergonomic'."
+    },
+    {
+      "text": "specifies-type-definitions",
+      "passed": true,
+      "evidence": "Multiple todos include explicit TypeScript type definitions. 01-database-schema.md defines `ConversationWithMembers`, `MessageWithSender`, `ReadReceiptInfo` in `src/types/chat.ts`. 04-client-state.md provides a full TypeScript interface inline: `interface ChatStore { conversations: Record<string, ConversationWithMembers>; messages: Record<string, MessageWithSender[]>; ... }`. 02-websocket-server.md specifies typed event protocol interfaces and `ChatErrorCode` enum in `src/lib/chat/events.ts`. 03-rest-api-routes.md specifies Zod validation schemas in `src/lib/chat/api-schemas.ts`."
+    }
+  ]
+}

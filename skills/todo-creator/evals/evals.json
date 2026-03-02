@@ -1,0 +1,169 @@
+{
+  "skill_name": "todo-creator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "simple-password-reset",
+      "prompt": "로그인 페이지에 '비밀번호 찾기' 링크 추가해줘. 클릭하면 이메일 입력 폼이 나오고, 이메일로 리셋 링크 보내는 기능이야.",
+      "expected_output": "1-2개의 todo 파일. 체크리스트 항목이 구체적이고 파일 경로가 포함되어야 함.",
+      "files": [],
+      "assertions": {
+        "baseline": [
+          {
+            "name": "appropriate-file-count",
+            "description": "Creates 1-2 todo files (not over-split for a simple feature)"
+          },
+          {
+            "name": "checklist-has-file-paths",
+            "description": "Checklist items reference specific file paths or component names"
+          },
+          {
+            "name": "correct-markdown-format",
+            "description": "Each file has: H1 title, context paragraph, and checklist with '- [ ]' items"
+          },
+          {
+            "name": "checklist-items-are-concrete",
+            "description": "Each checklist item describes a specific implementable action, not vague directives"
+          }
+        ],
+        "discriminating": [
+          {
+            "name": "includes-test-specifications",
+            "description": "At least one todo includes explicit test file paths and describes 2+ specific test scenarios (e.g., 'validateResetToken returns null for expired token')"
+          },
+          {
+            "name": "documents-design-assumptions",
+            "description": "Context paragraphs state architectural assumptions explicitly (e.g., 'Assuming Prisma ORM', 'prevents email enumeration by always returning 200')"
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "medium-profile-page",
+      "prompt": "사용자 프로필 페이지를 만들어줘. 프로필 사진 업로드, 닉네임 변경, 비밀번호 변경 기능이 필요해. 백엔드 API도 같이.",
+      "expected_output": "3+ todo 파일로 분리 (data layer, API, UI 각각). 번호 prefix로 순서 지정. 각 todo에 충분한 컨텍스트.",
+      "files": [],
+      "assertions": {
+        "baseline": [
+          {
+            "name": "concern-based-split",
+            "description": "Todos are split by logical concern (e.g., backend vs frontend, or by feature domain), not arbitrarily"
+          },
+          {
+            "name": "dependency-ordering",
+            "description": "Files use numbered prefixes that reflect execution order when dependencies exist"
+          },
+          {
+            "name": "context-paragraph-present",
+            "description": "Each todo has a context paragraph explaining WHY and HOW it fits the bigger picture"
+          },
+          {
+            "name": "checklist-items-are-concrete",
+            "description": "Each checklist item describes a specific implementable action with enough detail for a worker agent"
+          }
+        ],
+        "discriminating": [
+          {
+            "name": "separates-data-layer",
+            "description": "Database schema/model changes are in a dedicated todo, separate from API route implementation"
+          },
+          {
+            "name": "includes-test-specifications",
+            "description": "At least one todo includes explicit test file paths with full paths (e.g., 'src/lib/__tests__/profile-api.test.ts') — not just framework names like 'vitest' or 'jest' — and describes 2+ specific named test scenarios (e.g., 'rejects upload exceeding 5MB limit', 'returns 401 for unauthenticated password change')"
+          },
+          {
+            "name": "documents-design-assumptions",
+            "description": "Context paragraphs state architectural assumptions (e.g., 'file uploads stored locally, no external storage assumed')"
+          },
+          {
+            "name": "specifies-component-props",
+            "description": "UI todo specifies component prop interfaces (e.g., 'AvatarUpload accepts currentAvatarUrl: string | null, onSuccess: (newUrl: string) => void')"
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "large-chat-system",
+      "prompt": "우리 앱에 실시간 채팅 시스템 추가해줘. 1:1 채팅이랑 그룹 채팅 둘 다 필요하고, 읽음 표시도 있으면 좋겠어. WebSocket 쓸지 SSE 쓸지는 알아서 결정해줘.",
+      "expected_output": "5+ todo 파일로 분리. 아키텍처 결정 사항이 todo 컨텍스트에 반영. client state가 UI와 분리.",
+      "files": [],
+      "assertions": {
+        "baseline": [
+          {
+            "name": "tech-decision-documented",
+            "description": "The WebSocket vs SSE decision is explicitly documented in the todo context with reasoning"
+          },
+          {
+            "name": "concern-based-decomposition",
+            "description": "Feature is decomposed by concern (data model, real-time infra, API, UI) not artificially size-limited"
+          },
+          {
+            "name": "allows-large-cohesive-todos",
+            "description": "Tightly coupled items are kept in the same todo rather than over-split (leveraging handoff)"
+          },
+          {
+            "name": "checklist-items-are-concrete",
+            "description": "Each checklist item describes a specific implementable action, not vague directives"
+          }
+        ],
+        "discriminating": [
+          {
+            "name": "separates-state-from-ui",
+            "description": "Client-side state management (stores, hooks, WS connection) is in a dedicated todo, separate from UI component rendering"
+          },
+          {
+            "name": "includes-test-specifications",
+            "description": "At least one todo includes explicit test file paths with full paths (e.g., 'src/lib/__tests__/chat.test.ts', 'src/__tests__/ws-connection.test.ts') — not just framework names like 'vitest' or 'jest' — and describes 2+ specific named test scenarios (e.g., 'reconnects automatically after server disconnect', 'marks messages as read only for active chat room')"
+          },
+          {
+            "name": "documents-design-assumptions",
+            "description": "Context paragraphs state architectural assumptions (e.g., read-tracking strategy, reconnection policy)"
+          },
+          {
+            "name": "specifies-type-definitions",
+            "description": "Includes explicit TypeScript type/interface definitions or references (e.g., WsServerEvent discriminated union, Zod schemas)"
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "trivial-typo-fix",
+      "prompt": "헤더 컴포넌트에 오타가 있어서 '설정' 이 '설젇' 으로 표시돼. 수정해줘.",
+      "expected_output": "정확히 1개의 todo 파일. 제목과 1-3개의 체크리스트 항목만 포함된 최소한의 구성.",
+      "files": [],
+      "assertions": {
+        "baseline": [
+          {
+            "name": "single-file-output",
+            "description": "Creates exactly 1 todo file — a single typo fix must not be split into multiple todos"
+          },
+          {
+            "name": "correct-markdown-format",
+            "description": "The file has an H1 title, an optional brief context sentence, and a checklist with '- [ ]' items"
+          },
+          {
+            "name": "minimal-checklist-items",
+            "description": "Contains 1-3 checklist items total — proportional to the trivial scope of fixing a typo"
+          }
+        ],
+        "discriminating": [
+          {
+            "name": "no-multi-file-split",
+            "description": "Does NOT create multiple todo files (e.g., separate files for 'investigation', 'fix', 'testing') — a typo fix belongs in a single file"
+          },
+          {
+            "name": "no-brainstorming-artifacts",
+            "description": "Does NOT include brainstorming output, architectural analysis, or design-decision documentation — these are disproportionate for a typo fix"
+          },
+          {
+            "name": "scope-proportional-to-request",
+            "description": "Does NOT add unrelated scope such as test specifications, type definitions, component refactors, or i18n considerations — the output is strictly scoped to the typo correction"
+          }
+        ]
+      }
+    }
+  ]
+}

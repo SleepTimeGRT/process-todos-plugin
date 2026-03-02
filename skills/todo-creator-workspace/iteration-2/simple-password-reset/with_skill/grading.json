@@ -1,0 +1,36 @@
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-with_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "passed": true,
+      "evidence": "Exactly 3 files were created: 01-password-reset-db-schema.md, 02-password-reset-backend.md, 03-password-reset-ui.md. This is within the 1-3 range and is appropriate for this feature."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "passed": true,
+      "evidence": "Checklist items reference specific file paths throughout all three files, e.g., 'prisma/schema.prisma', 'src/types/auth.ts', 'src/lib/__tests__/password-reset-token-schema.test.ts', 'src/lib/mailer.ts', 'src/app/api/auth/forgot-password/route.ts', 'src/app/(auth)/login/page.tsx', 'src/components/auth/ForgotPasswordForm.tsx', 'src/components/auth/__tests__/ResetPasswordForm.test.tsx'."
+    },
+    {
+      "text": "correct-markdown-format",
+      "passed": true,
+      "evidence": "All three files have: an H1 title (e.g., '# Add PasswordResetToken DB Schema and Migration'), a context paragraph following the title, and checklist items using '- [ ]' format (e.g., '- [ ] Add a `PasswordResetToken` model to `prisma/schema.prisma`...')."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Items describe specific implementable actions with exact details: field names ('id String @id @default(cuid())', 'token String @unique'), function signatures ('createResetToken(email: string): Promise<string>'), HTTP status codes ('return HTTP 400 { error: \"유효한 이메일 주소를 입력해 주세요.\" }'), Zod schema details ('z.string().email()'), and precise component state ('email: string', 'loading: boolean', 'success: boolean')."
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": true,
+      "evidence": "File 02 specifies test file 'src/lib/__tests__/password-reset-token.test.ts' with 5 explicit scenarios including: '(c) validateResetToken returns null for a token whose expiresAt is in the past' and '(d) validateResetToken returns null for a token whose usedAt is set'. File 03 specifies 'src/components/auth/__tests__/ForgotPasswordForm.test.tsx' and 'ResetPasswordForm.test.tsx' with 4-5 specific scenarios each."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": true,
+      "evidence": "File 01 states: 'Assuming Prisma ORM with a PostgreSQL (or compatible) database'. File 02 states: 'Assumptions: Nodemailer (or Resend if already present) for email via environment variables; bcryptjs for password hashing; NEXT_PUBLIC_APP_URL env var for constructing the reset link.' File 02 also explicitly states the enumeration prevention assumption: 'Always return HTTP 200 ... regardless of whether the email is registered (prevents user enumeration)'. File 03 states: 'Assuming Next.js App Router, Tailwind CSS for styling, and React Testing Library for component tests.'"
+    }
+  ]
+}

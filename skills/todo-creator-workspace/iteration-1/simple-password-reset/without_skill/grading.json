@@ -1,0 +1,26 @@
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-without_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "passed": true,
+      "evidence": "Created 1 file (add-forgot-password.md). Compact and appropriate for a simple feature."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "passed": true,
+      "evidence": "File paths included: src/app/login/page.tsx, src/app/forgot-password/page.tsx, src/app/api/auth/forgot-password/route.ts."
+    },
+    {
+      "text": "correct-markdown-format",
+      "passed": true,
+      "evidence": "H1 title, context paragraph, 5 checklist items with '- [ ]'."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Specific: POST handler accepts { email: string }, crypto.randomUUID(), success message text specified in Korean."
+    }
+  ]
+}

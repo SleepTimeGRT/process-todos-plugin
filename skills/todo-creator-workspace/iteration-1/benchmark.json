@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "skill_name": "todo-creator",
+    "skill_path": "/Users/minchul/Workspace/process-todos-plugin/skills/todo-creator",
+    "executor_model": "claude-sonnet-4-6",
+    "timestamp": "2026-03-03T00:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 88.4,
+        "tokens": 18350,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "appropriate-file-count", "passed": true, "evidence": "Created 2 files (01-password-reset-backend.md, 02-password-reset-frontend.md)."},
+        {"text": "checklist-has-file-paths", "passed": true, "evidence": "Every item includes specific file paths."},
+        {"text": "correct-markdown-format", "passed": true, "evidence": "Both files have H1 title, context paragraph, and checklist."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "Includes field names, function signatures, bcryptjs with saltRounds=12, unit tests."}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 59.8,
+        "tokens": 19189,
+        "tool_calls": 14,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "appropriate-file-count", "passed": true, "evidence": "Created 1 file (add-forgot-password.md). Compact."},
+        {"text": "checklist-has-file-paths", "passed": true, "evidence": "Paths: src/app/login/page.tsx, src/app/forgot-password/page.tsx, etc."},
+        {"text": "correct-markdown-format", "passed": true, "evidence": "H1 title, context paragraph, 5 checklist items."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "POST handler with { email: string }, crypto.randomUUID()."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 99.1,
+        "tokens": 18879,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "concern-based-split", "passed": true, "evidence": "3 files: DB schema (01), API routes (02), UI (03)."},
+        {"text": "dependency-ordering", "passed": true, "evidence": "Numbered 01/02/03 with correct dependency order."},
+        {"text": "context-paragraph-present", "passed": true, "evidence": "All three have context paragraphs."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "MIME types, 5MB limit, validation rules, API response shapes."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 75.3,
+        "tokens": 20107,
+        "tool_calls": 16,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "concern-based-split", "passed": true, "evidence": "2 files: backend (01), frontend (02)."},
+        {"text": "dependency-ordering", "passed": true, "evidence": "Numbered 01/02."},
+        {"text": "context-paragraph-present", "passed": true, "evidence": "Both have context paragraphs."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "Max 30 chars nickname, 8-char minimum password."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 162.9,
+        "tokens": 22632,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "tech-decision-documented", "passed": true, "evidence": "WebSocket over SSE in 02-websocket-server.md with reasoning."},
+        {"text": "concern-based-decomposition", "passed": true, "evidence": "5 todos: DB, WS, API, client-state, UI."},
+        {"text": "allows-large-cohesive-todos", "passed": true, "evidence": "05-chat-ui.md: 9 items, 04-chat-client-state.md: 8 items."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "TypeScript types, code snippets, Zustand state shape."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 113.8,
+        "tokens": 24413,
+        "tool_calls": 12,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "tech-decision-documented", "passed": true, "evidence": "WebSocket chosen with reasoning in 02-websocket-server.md."},
+        {"text": "concern-based-decomposition", "passed": true, "evidence": "5 todos: DB, WS, API, UI, read-receipts UI."},
+        {"text": "allows-large-cohesive-todos", "passed": true, "evidence": "04-chat-ui.md has 11 items."},
+        {"text": "checklist-items-are-concrete", "passed": true, "evidence": "WsMessage types, IntersectionObserver, 500ms debounce."}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 116.8, "stddev": 39.2, "min": 88.4, "max": 162.9},
+      "tokens": {"mean": 19954, "stddev": 2360, "min": 18350, "max": 22632}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 82.97, "stddev": 27.3, "min": 59.8, "max": 113.8},
+      "tokens": {"mean": 21236, "stddev": 2773, "min": 19189, "max": 24413}
+    },
+    "delta": {
+      "pass_rate": "+0.00",
+      "time_seconds": "+33.8",
+      "tokens": "-1282"
+    }
+  },
+  "notes": [
+    "All assertions pass for both configurations — current assertions are non-discriminating.",
+    "With-skill takes ~34s longer (116.8s vs 83.0s) due to reading SKILL.md and structured process.",
+    "With-skill uses fewer tokens (19,954 vs 21,236), suggesting structure reduces exploration.",
+    "Qualitative: with-skill produces finer granularity (3 todos vs 2 for profile, separate client-state todo for chat).",
+    "The with-skill chat decomposition separating client-state from UI is arguably better architecture.",
+    "Assertions need more discrimination — consider: 'includes test items', 'separates data from UI', 'documents assumptions'."
+  ]
+}

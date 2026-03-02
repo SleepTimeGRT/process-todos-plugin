@@ -1,0 +1,46 @@
+{
+  "eval_id": 2,
+  "run_id": "medium-profile-page-with_skill",
+  "expectations": [
+    {
+      "text": "concern-based-split",
+      "passed": true,
+      "evidence": "The four files are split by logical concern: 01-data-layer-user-profile-schema.md (Prisma schema/DB), 02-backend-api-profile-routes.md (API routes), 03-client-state-profile-hooks.md (React Query hooks/state), 04-ui-profile-page-components.md (UI components). Each file addresses a distinct architectural layer rather than an arbitrary split."
+    },
+    {
+      "text": "dependency-ordering",
+      "passed": true,
+      "evidence": "Files use numeric prefixes 01, 02, 03, 04 reflecting execution order: schema must exist before API routes can query it, API routes must exist before client hooks can call them, and hooks must exist before UI components can consume them. Todo 03 explicitly references 'API routes defined in todo 02' and todo 04 references 'hooks from todo 03'."
+    },
+    {
+      "text": "context-paragraph-present",
+      "passed": true,
+      "evidence": "Every file begins with a context paragraph. E.g., file 01: 'The user profile page requires storing additional fields per user... Assumption: the project already has a User model...'; file 02: 'These Next.js API routes expose the profile management operations to the frontend... Assumption: authentication is handled via NextAuth.js...'; file 03: 'This layer provides the data-fetching hooks and mutation functions... It abstracts all fetch calls to the API routes defined in todo 02...'; file 04: 'This todo assembles the profile page from focused form components... The page lives at /profile and is protected...'."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Checklist items specify exact file paths, function signatures, and behaviors. For example: 'In prisma/schema.prisma, add avatarUrl String? and nickname String? fields to the User model'; 'Create app/api/profile/route.ts: GET — return the authenticated user's UserProfile (id, email, nickname, avatarUrl)'; 'Define a typed API client helper in lib/api/profile.ts with the following functions: fetchProfile(): Promise<UserProfile> — GET /api/profile'."
+    },
+    {
+      "text": "separates-data-layer",
+      "passed": true,
+      "evidence": "File 01 (01-data-layer-user-profile-schema.md) is dedicated entirely to Prisma schema changes, TypeScript type definitions, and migration steps. API route implementation is in a completely separate file 02 (02-backend-api-profile-routes.md). The data layer todo contains no API route definitions, and the API routes todo does not modify the schema."
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": true,
+      "evidence": "All four todos include test file paths and specific test scenarios. File 01: 'Write tests in tests/db/user-profile-schema.test.ts covering: A new user can be created with nickname and avatarUrl as null (default)...'; File 02: 'Write tests in tests/api/profile.test.ts covering: GET /api/profile returns 401 when not authenticated...'; File 03: 'Write tests in tests/hooks/useProfile.test.ts covering...'; File 04: 'Write tests in tests/ui/ProfilePage.test.tsx covering...'."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": true,
+      "evidence": "Each context paragraph states explicit architectural assumptions. File 01: 'Profile images will be stored externally (e.g., S3 or Cloudinary) and only the URL is persisted in the database'; File 02: 'Assumption: authentication is handled via NextAuth.js and getServerSession is used to identify the caller. Profile image uploads use multipart form data and are stored in an S3-compatible bucket'; File 03: 'Assumption: the project uses React Query (@tanstack/react-query) for server state'; File 04: 'Assumption: the project uses Tailwind CSS for styling, react-hook-form for form management, and shadcn/ui for base components'."
+    },
+    {
+      "text": "specifies-component-props",
+      "passed": true,
+      "evidence": "File 04 explicitly defines component prop interfaces in a dedicated section: 'Define component prop interfaces in components/profile/types.ts: export interface AvatarUploadProps { currentAvatarUrl: string | null; onUploadSuccess: (newUrl: string) => void; } export interface NicknameFormProps { currentNickname: string | null; } export interface PasswordFormProps {}'."
+    }
+  ]
+}

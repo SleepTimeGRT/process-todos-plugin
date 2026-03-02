@@ -1,0 +1,26 @@
+{
+  "eval_id": 2,
+  "run_id": "medium-profile-page-without_skill",
+  "expectations": [
+    {
+      "text": "concern-based-split",
+      "passed": true,
+      "evidence": "Split into 2 files: backend API (01), frontend UI (02). Clean concern separation."
+    },
+    {
+      "text": "dependency-ordering",
+      "passed": true,
+      "evidence": "Numbered 01/02. Backend before frontend, which is correct."
+    },
+    {
+      "text": "context-paragraph-present",
+      "passed": true,
+      "evidence": "Both files have context paragraphs. Frontend todo explicitly notes dependency on 01."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Specific: max 30 chars for nickname, 8-char minimum password, 5MB file cap, specific API route paths."
+    }
+  ]
+}

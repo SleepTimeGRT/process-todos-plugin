@@ -1,0 +1,46 @@
+{
+  "eval_id": 3,
+  "run_id": "large-chat-system-without_skill",
+  "expectations": [
+    {
+      "text": "tech-decision-documented",
+      "passed": true,
+      "evidence": "02-websocket-server.md explicitly states: 'WebSockets are chosen over SSE because chat requires full-duplex communication — both sending and receiving messages — and SSE is one-directional.' This documents the WebSocket vs SSE decision with clear reasoning in the todo context."
+    },
+    {
+      "text": "concern-based-decomposition",
+      "passed": true,
+      "evidence": "The 8 todos decompose the feature by distinct concern: 01=database schema (data model), 02=WebSocket server (real-time infra), 03=REST API routes (API), 04=WebSocket client hook (client transport), 05=state management (client store), 06=UI components (rendering), 07=read receipts (cross-cutting feature), 08=notifications and polish. No todo is split by arbitrary size; each maps to a coherent technical concern."
+    },
+    {
+      "text": "allows-large-cohesive-todos",
+      "passed": true,
+      "evidence": "Read receipts (07) is kept as a single todo covering the full end-to-end flow: REST mark-read call, WebSocket server handler, Zustand store update, MessageBubble UI rendering, group/DM display variants, and offline edge case — all tightly coupled items in one todo rather than split across multiple. Similarly, 02-websocket-server.md covers the full server setup including auth, message handlers, and heartbeat in one cohesive todo."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "All checklist items describe specific implementable actions with file paths, method signatures, and behavior details. Examples: 'Create app/api/chat/rooms/route.ts: GET returns the authenticated user's room list with last message preview and unread count; POST creates a new room (accepts type, name, memberIds[])' (03); 'Implement exponential backoff reconnection: on close or error, wait min(1000 * 2^attempt, 30000) ms before reconnecting; reset attempt counter on successful open' (04). None are vague directives."
+    },
+    {
+      "text": "separates-state-from-ui",
+      "passed": true,
+      "evidence": "Client-side state management is entirely in 05-chat-state-management.md (Zustand store, types, actions, hooks/use-chat-actions.ts wiring WebSocket events to the store) while UI component rendering is entirely in 06-chat-ui-components.md (ChatSidebar, MessageList, MessageBubble, MessageInput, etc.). The WebSocket client hook itself is a separate todo (04). These are three distinct, dedicated todos."
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": true,
+      "evidence": "08-notifications-and-polish.md includes: 'Write integration tests for the WebSocket send_message and mark_read flows using vitest and a test WebSocket client.' This specifies the test framework (vitest), the specific test scenarios (send_message and mark_read flows), and the tooling (test WebSocket client). However, no explicit test file paths (e.g., __tests__/chat.test.ts) are provided."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": true,
+      "evidence": "Multiple todos state architectural assumptions in context paragraphs. 02-websocket-server.md: 'A custom Next.js server (server.ts) is needed to attach the WebSocket server to the same HTTP port.' 03-chat-api-routes.md: 'These REST endpoints handle operations that do not need to be real-time' and 'POST is a fallback HTTP message send for clients without WebSocket support.' 07-read-receipts.md implies a read-tracking strategy using both lastReadAt and per-message MessageReadReceipt. 04-websocket-client-hook.md describes the reconnection policy: exponential backoff with min(1000 * 2^attempt, 30000) ms."
+    },
+    {
+      "text": "specifies-type-definitions",
+      "passed": true,
+      "evidence": "04-websocket-client-hook.md defines: 'Define a ChatEvent discriminated union type covering all server-sent event shapes: message_received, read_update, member_joined, member_left, connected, error.' 02-websocket-server.md defines: 'Define a SocketClient type that extends ws.WebSocket with fields: userId: string, rooms: Set<string>.' 05-chat-state-management.md defines: 'Define types: Room, Message, Member, ReadReceipt mirroring the Prisma models but as plain client-side objects.' 03-chat-api-routes.md mentions Zod: 'Add input validation with zod for all POST/PATCH request bodies.'"
+    }
+  ]
+}

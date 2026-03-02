@@ -1,0 +1,26 @@
+{
+  "eval_id": 2,
+  "run_id": "medium-profile-page-with_skill",
+  "expectations": [
+    {
+      "text": "concern-based-split",
+      "passed": true,
+      "evidence": "Split into 3 files by layer: DB schema (01), API routes (02), UI (03). Each is a coherent concern."
+    },
+    {
+      "text": "dependency-ordering",
+      "passed": true,
+      "evidence": "Numbered 01/02/03. Schema must exist before API, API before UI. Order is correct."
+    },
+    {
+      "text": "context-paragraph-present",
+      "passed": true,
+      "evidence": "All three files have context paragraphs explaining purpose and dependencies (e.g., 'These fields must be added... before the API routes or UI can be built')."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Very detailed: MIME types listed, 5MB limit, validation rules (2-30 chars nickname), API response shapes, file upload directory path."
+    }
+  ]
+}

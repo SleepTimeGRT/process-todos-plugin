@@ -1,0 +1,26 @@
+{
+  "eval_id": 3,
+  "run_id": "large-chat-system-without_skill",
+  "expectations": [
+    {
+      "text": "tech-decision-documented",
+      "passed": true,
+      "evidence": "02-websocket-server.md: 'WebSocket is chosen over SSE because the chat feature requires bidirectional communication — clients must both send and receive messages in real time, and SSE is server-to-client only.'"
+    },
+    {
+      "text": "concern-based-decomposition",
+      "passed": true,
+      "evidence": "5 todos: DB (01), WS server (02), API routes (03), UI (04), read-receipts UI (05). Reasonable layer-based split."
+    },
+    {
+      "text": "allows-large-cohesive-todos",
+      "passed": true,
+      "evidence": "04-chat-ui.md has 11 items — kept all UI in one large todo. Shows willingness to keep cohesive work together."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Detailed: WsMessage discriminated union types, IntersectionObserver for read tracking, debounce timing (500ms), specific component prop signatures."
+    }
+  ]
+}

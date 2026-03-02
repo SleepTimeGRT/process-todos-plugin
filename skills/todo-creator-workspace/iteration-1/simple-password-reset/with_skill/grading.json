@@ -1,0 +1,26 @@
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-with_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "passed": true,
+      "evidence": "Created 2 files (01-password-reset-backend.md, 02-password-reset-frontend.md). Within 1-2 range, split by backend/frontend concern."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "passed": true,
+      "evidence": "Every item includes specific file paths: prisma/schema.prisma, src/lib/mailer.ts, src/lib/password-reset-token.ts, src/app/api/auth/forgot-password/route.ts, src/components/auth/ForgotPasswordForm.tsx, etc."
+    },
+    {
+      "text": "correct-markdown-format",
+      "passed": true,
+      "evidence": "Both files have H1 title, context paragraph explaining purpose, and checklist with '- [ ]' items."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Highly specific: includes field names (token, email, expiresAt), function signatures (createResetToken, validateResetToken), bcryptjs with saltRounds=12, test cases for token utility."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "eval_id": 1,
+  "run_id": "simple-password-reset-without_skill",
+  "expectations": [
+    {
+      "text": "appropriate-file-count",
+      "passed": true,
+      "evidence": "Exactly 3 files were created: 01-password-reset-api.md, 02-forgot-password-page.md, 03-login-page-link.md. This is within the acceptable 1-3 range for a simple feature."
+    },
+    {
+      "text": "checklist-has-file-paths",
+      "passed": true,
+      "evidence": "Multiple specific file paths are referenced across files: 'prisma/schema.prisma', 'app/api/auth/forgot-password/route.ts', 'app/auth/forgot-password/page.tsx', and 'app/auth/login/page.tsx' (or similar)."
+    },
+    {
+      "text": "correct-markdown-format",
+      "passed": true,
+      "evidence": "All three files have an H1 title (e.g., '# Password Reset API Endpoint'), a context paragraph, and checklist items using '- [ ]' format (e.g., '- [ ] Add a `passwordResetToken` and `passwordResetTokenExpiry` field...')."
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Items describe specific implementable actions with named APIs and tools, e.g., 'Generate a cryptographically secure random token using `crypto.randomBytes`', 'Run `npx prisma migrate dev` to apply the schema changes', 'Create `app/api/auth/forgot-password/route.ts` with a `POST` handler'."
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": false,
+      "evidence": "No test file paths (e.g., *.test.ts or *.spec.ts) are mentioned in any of the three files, and no specific test scenarios are described. The files focus entirely on implementation steps without any testing requirements."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": true,
+      "evidence": "File 01's context paragraph explicitly states 'persisting it to the database via Prisma', naming Prisma as the ORM assumption. Additionally, checklist item 10 of file 01 states 'if no user is found, return a 200 response without revealing whether the email exists', documenting the anti-enumeration design decision. However, this latter assumption appears in the checklist rather than the context paragraph, making the assumption documentation partial."
+    }
+  ]
+}

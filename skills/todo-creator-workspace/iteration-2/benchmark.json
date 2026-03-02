@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "skill_name": "todo-creator",
+    "skill_path": "/Users/minchul/Workspace/process-todos-plugin/skills/todo-creator",
+    "executor_model": "claude-sonnet-4-6",
+    "grader_model": "claude-sonnet-4-6",
+    "timestamp": "2026-03-03T00:00:00Z",
+    "iteration": 2,
+    "previous_iteration": "iteration-1",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1,
+    "changes_from_previous": [
+      "Added discriminating assertions (includes-test-specifications, documents-design-assumptions, separates-data-layer, specifies-component-props, separates-state-from-ui, specifies-type-definitions)",
+      "Improved SKILL.md with explicit guidance: brainstorming fallback, finer layer separation, test/type/props/error-mapping inclusion",
+      "Assertions split into baseline (both should pass) and discriminating (skill should add value)"
+    ]
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 2,
+        "discriminating_total": 2,
+        "time_seconds": 96.7,
+        "tokens": 25444,
+        "tool_calls": 10,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "appropriate-file-count", "type": "baseline", "passed": true, "evidence": "3 files: 01-password-reset-db-schema.md, 02-password-reset-backend.md, 03-password-reset-ui.md"},
+        {"text": "checklist-has-file-paths", "type": "baseline", "passed": true, "evidence": "prisma/schema.prisma, src/lib/mailer.ts, src/lib/password-reset-token.ts, src/app/api/auth/forgot-password/route.ts, src/components/auth/ForgotPasswordForm.tsx"},
+        {"text": "correct-markdown-format", "type": "baseline", "passed": true, "evidence": "All 3 files: H1 title, context paragraph, checklist with '- [ ]' items"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "Exact field names, function signatures, Zod schema details, HTTP status codes"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": true, "evidence": "File 02: src/lib/__tests__/password-reset-token.test.ts with 5 scenarios. File 03: two test files with 4-5 scenarios each."},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": true, "evidence": "File 01: 'Assuming Prisma ORM with PostgreSQL'. File 02: Nodemailer/Resend, bcryptjs, email enumeration prevention. File 03: 'Assuming Next.js App Router, Tailwind CSS, React Testing Library'."}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "simple-password-reset",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.833,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 1,
+        "discriminating_total": 2,
+        "time_seconds": 32.0,
+        "tokens": 13982,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "appropriate-file-count", "type": "baseline", "passed": true, "evidence": "3 files: 01-password-reset-api.md, 02-forgot-password-page.md, 03-login-page-link.md"},
+        {"text": "checklist-has-file-paths", "type": "baseline", "passed": true, "evidence": "prisma/schema.prisma, app/api/auth/forgot-password/route.ts, app/auth/forgot-password/page.tsx"},
+        {"text": "correct-markdown-format", "type": "baseline", "passed": true, "evidence": "All 3 files: H1 title, context paragraph, checklist"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "crypto.randomBytes, npx prisma migrate dev, specific file paths"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": false, "evidence": "No test file paths or test scenarios described in any file"},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": true, "evidence": "File 01 context: 'persisting it to the database via Prisma'. Anti-enumeration in checklist (partial)."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 4,
+        "discriminating_total": 4,
+        "time_seconds": 75.0,
+        "tokens": 16695,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "concern-based-split", "type": "baseline", "passed": true, "evidence": "4 files: data layer, backend API, client state/hooks, UI components"},
+        {"text": "dependency-ordering", "type": "baseline", "passed": true, "evidence": "Numbered 01-04, later todos reference earlier ones"},
+        {"text": "context-paragraph-present", "type": "baseline", "passed": true, "evidence": "All files have WHY/HOW context paragraphs"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "Exact file paths, function signatures, HTTP methods, error codes"},
+        {"text": "separates-data-layer", "type": "discriminating", "passed": true, "evidence": "File 01 exclusively about Prisma schema/migration; API routes entirely in File 02"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": true, "evidence": "All 4 todos specify test file paths (tests/db/, tests/api/, tests/hooks/, tests/ui/) with concrete scenarios"},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": true, "evidence": "Each context paragraph names tech assumptions: NextAuth.js, S3/Cloudinary, React Query, Tailwind, shadcn/ui"},
+        {"text": "specifies-component-props", "type": "discriminating", "passed": true, "evidence": "File 04: typed prop interfaces AvatarUploadProps, NicknameFormProps, PasswordFormProps with TypeScript signatures"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "medium-profile-page",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.625,
+        "passed": 5,
+        "failed": 3,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 1,
+        "discriminating_total": 4,
+        "time_seconds": 53.9,
+        "tokens": 15103,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "concern-based-split", "type": "baseline", "passed": true, "evidence": "5 files: schema, avatar API, nickname API, password API, frontend UI"},
+        {"text": "dependency-ordering", "type": "baseline", "passed": true, "evidence": "Numbered 01-05 reflecting execution order"},
+        {"text": "context-paragraph-present", "type": "baseline", "passed": true, "evidence": "All 5 files have context paragraphs"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "bcrypt.compare, bcrypt.hash(newPassword, 12), file type/size validation"},
+        {"text": "separates-data-layer", "type": "discriminating", "passed": true, "evidence": "File 01 dedicated to Prisma schema changes and migrations"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": false, "evidence": "No test file paths or test scenarios in any file"},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": false, "evidence": "File 02 hedges: 'e.g., on the local filesystem under public/uploads or a cloud storage service' — no firm assumption"},
+        {"text": "specifies-component-props", "type": "discriminating", "passed": false, "evidence": "Components named and described behaviorally, but no TypeScript prop interfaces defined"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 4,
+        "discriminating_total": 4,
+        "time_seconds": 148.7,
+        "tokens": 19950,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "tech-decision-documented", "type": "baseline", "passed": true, "evidence": "02-websocket-server.md: 'WebSocket chosen over SSE because chat requires true bidirectional communication'"},
+        {"text": "concern-based-decomposition", "type": "baseline", "passed": true, "evidence": "5 todos: DB schema, WS server, REST API, client state, UI"},
+        {"text": "allows-large-cohesive-todos", "type": "baseline", "passed": true, "evidence": "WS todo keeps protocol + handler + server setup + tests together; client-state keeps all hooks + store"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "Specific files, migration commands, exact behaviors with field names and constraints"},
+        {"text": "separates-state-from-ui", "type": "discriminating", "passed": true, "evidence": "04-client-state.md: Zustand store + hooks. 05-chat-ui.md: component rendering only"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": true, "evidence": "Every todo has test section with file paths like src/__tests__/chat/socket-handler.test.ts and named scenarios"},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": true, "evidence": "Read-receipt strategy, reconnection policy, pagination strategy, state library choice all documented"},
+        {"text": "specifies-type-definitions", "type": "discriminating", "passed": true, "evidence": "ChatStore interface, WsServerEvent/WsClientEvent in events.ts, Zod schemas in api-schemas.ts"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "large-chat-system",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "baseline_passed": 4,
+        "baseline_total": 4,
+        "discriminating_passed": 4,
+        "discriminating_total": 4,
+        "time_seconds": 108.0,
+        "tokens": 17709,
+        "tool_calls": 9,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "tech-decision-documented", "type": "baseline", "passed": true, "evidence": "02-websocket-server.md: 'WebSockets are chosen over SSE because chat requires full-duplex communication'"},
+        {"text": "concern-based-decomposition", "type": "baseline", "passed": true, "evidence": "8 todos: DB, WS server, REST API, WS client hook, state management, UI, read receipts, notifications"},
+        {"text": "allows-large-cohesive-todos", "type": "baseline", "passed": true, "evidence": "07-read-receipts.md: full end-to-end flow (REST, WS, store, UI, offline edge case) kept together"},
+        {"text": "checklist-items-are-concrete", "type": "baseline", "passed": true, "evidence": "Specific file paths, exponential backoff formula, discriminated union types"},
+        {"text": "separates-state-from-ui", "type": "discriminating", "passed": true, "evidence": "05-chat-state-management.md (store+hooks) separate from 06-chat-ui-components.md (rendering)"},
+        {"text": "includes-test-specifications", "type": "discriminating", "passed": true, "evidence": "08: 'Write integration tests for send_message and mark_read flows using vitest' — no explicit test file paths though"},
+        {"text": "documents-design-assumptions", "type": "discriminating", "passed": true, "evidence": "Custom server requirement, REST-as-fallback, reconnection policy, read-tracking strategy all documented"},
+        {"text": "specifies-type-definitions", "type": "discriminating", "passed": true, "evidence": "ChatEvent discriminated union, SocketClient type, Room/Message/Member types, Zod validation"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "overall_pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "baseline_pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "discriminating_pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 106.8, "stddev": 30.9, "min": 75.0, "max": 148.7},
+      "tokens": {"mean": 20696, "stddev": 3611, "min": 16695, "max": 25444}
+    },
+    "without_skill": {
+      "overall_pass_rate": {"mean": 0.819, "stddev": 0.155, "min": 0.625, "max": 1.0},
+      "baseline_pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "discriminating_pass_rate": {"mean": 0.583, "stddev": 0.312, "min": 0.25, "max": 1.0},
+      "time_seconds": {"mean": 64.6, "stddev": 31.9, "min": 32.0, "max": 108.0},
+      "tokens": {"mean": 15598, "stddev": 1561, "min": 13982, "max": 17709}
+    },
+    "delta": {
+      "overall_pass_rate": "+0.181",
+      "baseline_pass_rate": "+0.00",
+      "discriminating_pass_rate": "+0.417",
+      "time_seconds": "+42.2",
+      "tokens": "+5098"
+    }
+  },
+  "notes": [
+    "Discriminating assertions now successfully differentiate: with-skill scores 100% vs without-skill 58.3% on discriminating assertions.",
+    "Baseline assertions remain non-discriminating (both 100%) — confirming they measure floor quality correctly.",
+    "The skill's value is strongest on simple and medium features (discriminating: with 100% vs without 50%/25%).",
+    "For complex features (large), both configurations pass all assertions — Sonnet already produces high-quality decomposition for complex tasks.",
+    "This suggests the skill acts as a 'floor-raiser': ensuring consistent quality regardless of feature complexity.",
+    "includes-test-specifications is the single strongest discriminator: with-skill always passes, without-skill never passes for simple/medium.",
+    "separates-data-layer is no longer discriminating — without-skill also separates schema in iteration 2 (improvement from iteration 1).",
+    "With-skill takes ~42s longer and uses ~5k more tokens due to structured process, but produces consistently higher-quality output.",
+    "Large without-skill includes-test-specifications passed but with borderline evidence (no explicit test file paths, only framework mention)."
+  ]
+}

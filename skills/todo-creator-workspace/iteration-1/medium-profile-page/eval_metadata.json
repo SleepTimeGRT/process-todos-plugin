@@ -1,0 +1,23 @@
+{
+  "eval_id": 2,
+  "eval_name": "medium-profile-page",
+  "prompt": "사용자 프로필 페이지를 만들어줘. 프로필 사진 업로드, 닉네임 변경, 비밀번호 변경 기능이 필요해. 백엔드 API도 같이.",
+  "assertions": [
+    {
+      "name": "concern-based-split",
+      "description": "Todos are split by logical concern (e.g., backend vs frontend, or by feature domain), not arbitrarily"
+    },
+    {
+      "name": "dependency-ordering",
+      "description": "Files use numbered prefixes or naming that reflects execution order when dependencies exist"
+    },
+    {
+      "name": "context-paragraph-present",
+      "description": "Each todo has a context paragraph explaining WHY and HOW it fits the bigger picture"
+    },
+    {
+      "name": "checklist-items-are-concrete",
+      "description": "Each checklist item describes a specific implementable action with enough detail for a worker agent"
+    }
+  ]
+}

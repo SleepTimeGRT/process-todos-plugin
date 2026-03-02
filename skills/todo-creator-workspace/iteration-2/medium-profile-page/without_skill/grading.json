@@ -1,0 +1,46 @@
+{
+  "eval_id": 2,
+  "run_id": "medium-profile-page-without_skill",
+  "expectations": [
+    {
+      "text": "concern-based-split",
+      "passed": true,
+      "evidence": "Files are split into distinct logical concerns: 01-prisma-schema-update.md (data layer), 02-api-profile-photo-upload.md (avatar API), 03-api-update-nickname.md (nickname API), 04-api-change-password.md (password API), and 05-frontend-profile-page.md (UI). Each file addresses a single coherent domain rather than mixing concerns arbitrarily."
+    },
+    {
+      "text": "dependency-ordering",
+      "passed": true,
+      "evidence": "Numbered prefixes 01-05 reflect execution dependencies: '01-prisma-schema-update' is first because 'This schema change is the foundation that all other profile-related API routes and UI components depend on.' API routes (02-04) follow the schema change, and the frontend (05) comes last as it depends on the APIs."
+    },
+    {
+      "text": "context-paragraph-present",
+      "passed": true,
+      "evidence": "Every file has a context paragraph. Examples: file 01: 'The user profile feature requires extending the existing User model in Prisma to support a profile photo URL and nickname field. This schema change is the foundation that all other profile-related API routes and UI components depend on.' File 02: 'Create a Next.js API route that handles profile photo uploads. The uploaded file should be stored...and the resulting URL should be persisted to the avatarUrl field on the User record via Prisma.'"
+    },
+    {
+      "text": "checklist-items-are-concrete",
+      "passed": true,
+      "evidence": "Items specify exact file paths, commands, and validation rules. Examples: 'Run npx prisma migrate dev --name add-user-profile-fields to generate and apply the migration', 'Validate file type (allow only image/jpeg, image/png, image/webp) and enforce a max file size of 5 MB', 'Use bcrypt.compare(currentPassword, user.passwordHash) to verify the current password; return 401 if it does not match', 'Hash the new password using bcrypt.hash(newPassword, 12)'"
+    },
+    {
+      "text": "separates-data-layer",
+      "passed": true,
+      "evidence": "File 01-prisma-schema-update.md is entirely dedicated to schema/model changes: adding 'nickname String?' and 'avatarUrl String?' fields, running migrations, and regenerating the Prisma client. The API route implementations in files 02-04 are fully separate and only reference the fields via prisma.user.update calls."
+    },
+    {
+      "text": "includes-test-specifications",
+      "passed": false,
+      "evidence": "None of the 5 output files mention test file paths or describe specific test scenarios. There are no references to test files (e.g., no '*.test.ts' or '*.spec.ts' paths), no testing frameworks, and no test case descriptions anywhere in the checklist items."
+    },
+    {
+      "text": "documents-design-assumptions",
+      "passed": false,
+      "evidence": "File 02 hedges with 'The uploaded file should be stored (e.g., on the local filesystem under public/uploads or a cloud storage service)' rather than stating a firm architectural assumption. The use of 'e.g.' and 'or a cloud storage service' means no clear assumption is committed to. No other file states explicit architectural assumptions such as 'file uploads stored locally, no external storage assumed.'"
+    },
+    {
+      "text": "specifies-component-props",
+      "passed": false,
+      "evidence": "File 05 names three components (AvatarUpload.tsx, NicknameForm.tsx, PasswordForm.tsx) and describes their behavior, but does not specify any TypeScript prop interfaces. There is no definition like 'AvatarUpload accepts currentAvatarUrl: string | null, onSuccess: (newUrl: string) => void' or equivalent prop signatures for any of the components."
+    }
+  ]
+}
