@@ -1,5 +1,9 @@
 ---
 description: Only invoke when the user explicitly runs /process-todos. 3-tier agent orchestration for sequential todo processing with git worktree isolation, configurable via .process-todos.json.
+required_skills:
+  - superpowers:brainstorming
+  - dx:handoff
+  - simplify
 ---
 
 # Process Todos
@@ -22,8 +26,8 @@ Sequential todo ticket processor. Reads `{todo_path}/*.md` files and spawns `tod
 
 1. List all `.md` files in `{todo_path}/` directory using Glob
 2. Sort alphabetically by filename
-3. If no files found: report "No todos found in {todo_path}/" and stop
-4. If >3 files found: ask user to confirm batch processing before proceeding
+3. Filter out any file whose first line contains `<!-- skipped:` marker — these are previously-skipped todos
+4. If no files remain: report "No todos found in {todo_path}/" and stop
 5. Announce: "Found N todo(s): [filenames]. Processing sequentially."
 
 ### Step 2 — Process Each Todo
@@ -88,26 +92,28 @@ Parse the worker's return message.
 
 **If contains `<result>DONE</result>` in the response:**
 1. Run type check in worktree: `cd .claude/worktrees/<todo-name> && {type_check_command}`
-2. **If type check passes:**
-   1. Merge the worktree branch into the current branch: `git merge {branch_prefix}<todo-name> --no-edit`
-   2. Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`
-   3. Delete the branch: `git branch -d {branch_prefix}<todo-name>`
-   4. Delete the todo file: `{todo_path}/<filename>`
-   5. Announce: "Completed [N/total]: [filename]"
-   6. Proceed to next todo
+2. **If type check passes:** run code review before merging.
+   1. Run `/simplify` on the worktree diff (`cd .claude/worktrees/<todo-name> && git diff main...HEAD`) to review all changes the worker produced
+   2. **If review finds secrets or API keys in the diff** (e.g., hardcoded tokens, passwords, private keys, `.env` values committed): this is a **critical failure**. Write HANDOFF.md in the worktree documenting the exposed secrets and their locations, skip this todo (see "Skipping a Todo"), and proceed to the next todo. Do NOT merge.
+   3. If review suggests non-critical improvements: apply them in the worktree, commit, and continue
+   4. Merge the worktree branch into the current branch: `git merge {branch_prefix}<todo-name> --no-edit`
+   5. Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`
+   6. Delete the branch: `git branch -d {branch_prefix}<todo-name>`
+   7. Delete the todo file: `{todo_path}/<filename>`
+   8. Announce: "Completed [N/total]: [filename]"
+   9. Proceed to next todo
 3. **If merge fails (conflicts):**
-   1. Abort the merge: `git merge --abort`
-   2. Keep the worktree and branch intact for manual resolution
-   3. Announce: "Merge conflict for [filename]. Worktree preserved at `.claude/worktrees/<todo-name>`. Skipping to next todo."
-   4. Add to skipped list for the final summary
+   1. Assess conflict size: `git diff --name-only --diff-filter=U` to list conflicting files
+   2. **Small/localized conflicts** (1-2 files, conflicts are straightforward): resolve the conflicts automatically, then continue with the merge
+   3. **Large/ambiguous conflicts** (3+ files, or conflicts involve complex logic): abort the merge (`git merge --abort`), write HANDOFF.md in worktree documenting the conflict details, skip this todo (see "Skipping a Todo"), and proceed to the next todo
 4. **If type check fails:**
    1. Increment `handoff_count` for this todo
-   2. If 3rd attempt: stop and ask the user how to proceed
+   2. If 3rd attempt: write HANDOFF.md in worktree documenting the persistent type errors, skip this todo (see "Skipping a Todo"), and proceed to the next todo
    3. Spawn a new worker using the **type error prompt** from Step 2.4 with the full `{type_check_command}` output
    4. Announce: "Type check failed for [filename]. Spawning worker to fix. (attempt N/3)"
 
 **If contains `<result>HANDOFF</result>` in the response:**
-1. If this is the 3rd handoff for the same todo: stop and ask the user how to proceed — the ticket may be too large for automated processing
+1. If this is the 3rd handoff for the same todo: keep the worktree and branch intact, skip this todo (see "Skipping a Todo"), and proceed to the next todo — the ticket may be too large for automated processing
 2. Read `HANDOFF.md` from the worktree: `.claude/worktrees/<todo-name>/HANDOFF.md`
 3. Increment `handoff_count` for this todo
 4. Spawn a new worker with handoff context and the **same worktree path** (go back to Step 2.4) — the worktree already contains the previous worker's commits and HANDOFF.md
@@ -115,7 +121,17 @@ Parse the worker's return message.
 
 **If neither (unexpected):**
 1. If this is the first unexpected result for this todo: retry once by spawning a new worker with the same prompt and worktree path
-2. If retry also returns an unexpected result: merge the worktree branch to preserve any partial progress, then report both responses to user and ask how to proceed (skip / stop)
+2. If retry also returns an unexpected result: write HANDOFF.md in worktree documenting both unexpected responses, skip this todo (see "Skipping a Todo"), and proceed to the next todo
+
+### Skipping a Todo
+
+When a failure path requires skipping a todo (see Step 3), the orchestrator:
+1. Writes `HANDOFF.md` in the worktree (if not already present) documenting the failure and any partial progress
+2. Prepends `<!-- skipped: <reason> -->` as the first line of the todo file in `{todo_path}/`
+3. Adds the todo to the skipped list for the final summary
+4. Proceeds to the next todo
+
+**Re-enabling a skipped todo:** Manually remove the `<!-- skipped: ... -->` first line from the todo file. On the next `/process-todos` run, Step 1 will pick it up again. The worktree and branch from the previous attempt are preserved, so the new worker will resume from where the previous one left off.
 
 ### Step 4 — Summary
 
@@ -133,9 +149,9 @@ After all todos are processed (or stopped):
 ## Rules
 
 - **One todo at a time** — never process in parallel
-- **Never modify todo files** — only delete on successful completion
+- **Never modify todo files** — only delete on successful completion, or prepend skip marker on failure
 - **Sequential order** — alphabetical by filename
-- **User confirmation** — ask before batch processing >3 todos
+- **Never stop** — all failure paths skip the current todo and proceed to the next; never block on user input mid-run
 - **Clean up on completion** — delete both todo file and any handoff artifacts
 - **One worktree per ticket** — create once, reuse across handoffs, merge and remove on completion
 - **HANDOFF.md is in .gitignore** — never commit it; it persists in the worktree between handoff workers

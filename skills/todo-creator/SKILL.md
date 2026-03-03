@@ -4,8 +4,6 @@ description: Use this skill whenever the user wants to turn a feature idea, requ
 required_skills:
   - superpowers:brainstorming
   - dx:handoff
-  - superpowers:test-driven-development
-  - feature-dev:feature-dev
 ---
 
 # Todo Creator
