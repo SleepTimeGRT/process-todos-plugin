@@ -20,7 +20,9 @@ Sequential todo ticket processor. Reads `{todo_path}/*.md` files and spawns `tod
    - `type_check_command`: `npm run check-types` — pre-merge verification command
    - `branch_prefix`: `todo/` — git branch prefix for worktrees
    - `worker_model`: `null` — model for worker agent (null = system default, do not pass model parameter)
-3. Announce: "Config: todo_path={todo_path}, type_check_command={type_check_command}, branch_prefix={branch_prefix}, worker_model={worker_model}"
+   - `merge_strategy`: `pr` — how to integrate completed work. `pr`: push branch and create a pull request via `gh pr create`. `merge`: merge branch directly into current branch
+   - `pr_on_conflict`: `false` — only applies when `merge_strategy` is `merge`. If `true`, merge conflicts that would normally be skipped are instead pushed as a PR for manual review
+3. Announce: "Config: todo_path={todo_path}, type_check_command={type_check_command}, branch_prefix={branch_prefix}, worker_model={worker_model}, merge_strategy={merge_strategy}, pr_on_conflict={pr_on_conflict}"
 
 ### Step 1 — Discover Todos
 
@@ -96,16 +98,19 @@ Parse the worker's return message.
    1. Run `/simplify` on the worktree diff (`cd .claude/worktrees/<todo-name> && git diff main...HEAD`) to review all changes the worker produced
    2. **If review finds secrets or API keys in the diff** (e.g., hardcoded tokens, passwords, private keys, `.env` values committed): this is a **critical failure**. Write HANDOFF.md in the worktree documenting the exposed secrets and their locations, skip this todo (see "Skipping a Todo"), and proceed to the next todo. Do NOT merge.
    3. If review suggests non-critical improvements: apply them in the worktree, commit, and continue
-   4. Merge the worktree branch into the current branch: `git merge {branch_prefix}<todo-name> --no-edit`
-   5. Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`
-   6. Delete the branch: `git branch -d {branch_prefix}<todo-name>`
-   7. Delete the todo file: `{todo_path}/<filename>`
-   8. Announce: "Completed [N/total]: [filename]"
-   9. Proceed to next todo
-3. **If merge fails (conflicts):**
+   4. **Integrate based on `merge_strategy`:**
+      - **`merge`**: Merge the worktree branch into the current branch: `git merge {branch_prefix}<todo-name> --no-edit`. On merge conflict, see step 3 below.
+      - **`pr`**: Push the branch (`git push -u origin {branch_prefix}<todo-name>`) and create a PR (`gh pr create --head {branch_prefix}<todo-name> --title "<todo title>" --body "<summary of changes>"`). Keep the worktree and branch intact (the PR reviewer may request changes).
+   5. **If `merge` strategy:** Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`, delete the branch: `git branch -d {branch_prefix}<todo-name>`, delete the todo file: `{todo_path}/<filename>`
+   6. **If `pr` strategy:** Delete the todo file: `{todo_path}/<filename>` (worktree and branch remain until PR is merged)
+   7. Announce: "Completed [N/total]: [filename]" (include PR URL if `pr` strategy)
+   8. Proceed to next todo
+3. **If merge fails (conflicts)** (only applies when `merge_strategy` is `merge`):
    1. Assess conflict size: `git diff --name-only --diff-filter=U` to list conflicting files
    2. **Small/localized conflicts** (1-2 files, conflicts are straightforward): resolve the conflicts automatically, then continue with the merge
-   3. **Large/ambiguous conflicts** (3+ files, or conflicts involve complex logic): abort the merge (`git merge --abort`), write HANDOFF.md in worktree documenting the conflict details, skip this todo (see "Skipping a Todo"), and proceed to the next todo
+   3. **Large/ambiguous conflicts** (3+ files, or conflicts involve complex logic): abort the merge (`git merge --abort`).
+      - **If `pr_on_conflict` is `true`:** push the branch and create a PR instead (`gh pr create`), noting the merge conflict in the PR body. Delete the todo file. Proceed to next todo.
+      - **Otherwise:** write HANDOFF.md in worktree documenting the conflict details, skip this todo (see "Skipping a Todo"), and proceed to the next todo
 4. **If type check fails:**
    1. Increment `handoff_count` for this todo
    2. If 3rd attempt: write HANDOFF.md in worktree documenting the persistent type errors, skip this todo (see "Skipping a Todo"), and proceed to the next todo

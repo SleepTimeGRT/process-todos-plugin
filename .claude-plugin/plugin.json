@@ -1,5 +1,5 @@
 {
   "name": "process-todos",
   "description": "3-tier agent orchestration for sequential todo processing — reads todo tickets, spawns worker agents, manages git worktrees, and handles handoffs automatically",
-  "version": "1.2.0"
+  "version": "1.3.0"
 }
