@@ -99,8 +99,8 @@ Parse the worker's return message.
    2. **If review finds secrets or API keys in the diff** (e.g., hardcoded tokens, passwords, private keys, `.env` values committed): this is a **critical failure**. Write HANDOFF.md in the worktree documenting the exposed secrets and their locations, skip this todo (see "Skipping a Todo"), and proceed to the next todo. Do NOT merge.
    3. If review suggests non-critical improvements: apply them in the worktree, commit, and continue
    4. **Integrate based on `merge_strategy`:**
-      - **`merge`**: Merge the worktree branch into the current branch: `git merge {branch_prefix}<todo-name> --no-edit`. On merge conflict, see step 3 below.
-      - **`pr`**: Push the branch (`git push -u origin {branch_prefix}<todo-name>`) and create a PR (`gh pr create --head {branch_prefix}<todo-name> --title "<todo title>" --body "<summary of changes>"`). Keep the worktree and branch intact (the PR reviewer may request changes).
+      - **`merge`**: Squash merge the worktree branch into the current branch: `git merge --squash {branch_prefix}<todo-name> && git commit --no-edit`. On merge conflict, see step 3 below.
+      - **`pr`**: Push the branch (`git push -u origin {branch_prefix}<todo-name>`) and create a PR (`gh pr create --head {branch_prefix}<todo-name> --title "<todo title>" --body "<summary of changes>"`). Keep the worktree and branch intact (the PR reviewer may request changes). Note: PRs should be squash-merged when closing (via `gh pr merge --squash` or GitHub UI).
    5. **If `merge` strategy:** Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`, delete the branch: `git branch -d {branch_prefix}<todo-name>`, delete the todo file: `{todo_path}/<filename>`
    6. **If `pr` strategy:** Delete the todo file: `{todo_path}/<filename>` (worktree and branch remain until PR is merged)
    7. Announce: "Completed [N/total]: [filename]" (include PR URL if `pr` strategy)
