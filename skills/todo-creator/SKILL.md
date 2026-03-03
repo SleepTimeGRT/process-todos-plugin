@@ -18,7 +18,7 @@ The goal is to save the user from having to manually write todo markdown files. 
 
 Read `.process-todos.json` from the project root. If it doesn't exist, use defaults:
 - `todo_path`: `docs/todos`
-- `type_check_command`: `npm run check-types`
+- `type_check_command`: `null` (no type checking unless configured)
 - `branch_prefix`: `todo/`
 
 ### Step 2 — Understand the Request via Brainstorming

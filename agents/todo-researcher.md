@@ -63,3 +63,4 @@ Return exactly this structure:
 - Always include source URLs
 - Never edit files, write code, or create documents
 - If the question can be answered from the codebase alone, do not use web tools
+- If all strategies fail or return empty results, return the standard output format with Summary stating "Could not find reliable information on this topic" and Key Points listing what was attempted. This lets the worker make a decision rather than waiting indefinitely.

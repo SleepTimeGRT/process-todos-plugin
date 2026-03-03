@@ -53,6 +53,8 @@ Based on assessment, invoke skills in order:
 
 Follow each skill's instructions exactly. Do not skip steps within skills.
 
+**If any skill in the chain is unavailable** (e.g., running outside an environment with superpowers installed): perform that step's work directly. For brainstorming, explore the problem space yourself. For writing-plans, write a step-by-step implementation plan. For executing-plans, implement the plan step by step. The structure matters more than having the specific skill — cover the same ground manually.
+
 *Research delegation during execution:* When any skill requires external information, **never** use `WebSearch` or `WebFetch` directly. Spawn `Agent(subagent_type="process-todos:todo-researcher", prompt=<specific question>)` and use the researcher's summary to inform decisions.
 
 **Phase 3 — Context Self-Monitoring:**

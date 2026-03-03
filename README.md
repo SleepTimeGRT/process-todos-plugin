@@ -15,13 +15,24 @@ Create `.process-todos.json` in your project root to customize behavior:
 ```json
 {
   "todo_path": "docs/todos",
-  "type_check_command": "npm run check-types",
+  "type_check_command": null,
   "branch_prefix": "todo/",
-  "worker_model": null
+  "worker_model": null,
+  "merge_strategy": "pr",
+  "pr_on_conflict": false,
+  "base_branch": null
 }
 ```
 
 All fields are optional — defaults shown above.
+
+- `todo_path`: Directory containing todo markdown files
+- `type_check_command`: Command to run before merging (e.g., `npm run check-types`). `null` to skip.
+- `branch_prefix`: Git branch prefix for worktrees
+- `worker_model`: Model for worker agents (`null` = system default)
+- `merge_strategy`: `"pr"` to create pull requests, `"merge"` to squash merge directly
+- `pr_on_conflict`: When `merge_strategy` is `"merge"` and conflicts occur, create a PR instead of skipping
+- `base_branch`: Branch to sync against (`null` = auto-detect from remote HEAD, fallback to `main`)
 
 ## Usage
 
@@ -45,7 +56,11 @@ Place these files as `.md` files inside the configured `todo_path` directory.
 
 The plugin uses a 3-tier agent orchestration: a lead agent reads todos sequentially, spawns worker agents in isolated git worktrees, and handles handoffs when workers hit context limits. Workers can delegate research to lightweight researcher agents to preserve their own context.
 
-Run `/process-todos` to start processing. Use the `todo-creator` skill to generate well-structured todo files from natural language descriptions.
+Run `/process-todos` to start processing.
+
+### Creating Todos
+
+Use the `todo-creator` skill to generate well-structured todo files from natural language descriptions. Describe what you want built in plain language, and it produces ready-to-process todo tickets with clear titles, context, and implementation checklists. Works in both English and Korean.
 
 ## Troubleshooting
 
