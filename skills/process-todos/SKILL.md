@@ -120,7 +120,7 @@ Parse the worker's return message.
    2. **Integrate based on `merge_strategy`:**
       - **`merge`**: Squash merge the worktree branch into the current branch: `git merge --squash {branch_prefix}<todo-name> && git commit -m "feat: <todo-name>"`. On merge conflict, see step 3 below.
       - **`pr`**: Push the branch (`git push -u origin {branch_prefix}<todo-name>`) and create a PR (`gh pr create --head {branch_prefix}<todo-name> --title "<todo title>" --body "<summary of changes>"`). Keep the worktree and branch intact (the PR reviewer may request changes). Note: PRs should be squash-merged when closing (via `gh pr merge --squash` or GitHub UI).
-   4. **If `merge` strategy:** Remove the worktree: `git worktree remove .claude/worktrees/<todo-name>`, delete the branch: `git branch -D {branch_prefix}<todo-name>` (force-delete required because squash merge doesn't create a merge relationship), delete the todo file: `{todo_path}/<filename>`
+   4. **If `merge` strategy:** Remove the worktree: `git worktree remove --force .claude/worktrees/<todo-name>` (force required because HANDOFF.md is untracked/gitignored), delete the branch: `git branch -D {branch_prefix}<todo-name>` (force-delete required because squash merge doesn't create a merge relationship), delete the todo file: `{todo_path}/<filename>`
    5. **If `pr` strategy:** Delete the todo file: `{todo_path}/<filename>` (worktree and branch remain until PR is merged)
    6. Announce: "Completed [N/total]: [filename]" (include PR URL if `pr` strategy)
    7. Proceed to next todo
