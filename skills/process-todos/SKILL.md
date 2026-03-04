@@ -45,9 +45,9 @@ Maintain a `handoff_count` per todo (starts at 0). For each todo file (one at a 
      - If `HANDOFF.md` exists in the worktree: treat as a handoff (use handoff prompt in Step 2.6)
      - If no `HANDOFF.md`: use the first-attempt prompt
    - **If the directory does not exist:**
-     - Check if branch `{branch_prefix}<todo-name>` already exists: `git branch --list {branch_prefix}<todo-name>`
-     - Branch exists: `git worktree add .claude/worktrees/<todo-name> {branch_prefix}<todo-name>`
-     - Branch does not exist: `git worktree add .claude/worktrees/<todo-name> -b {branch_prefix}<todo-name>`
+     - Check if branch `{branch_prefix}<todo-name>` already exists: `git branch --list "{branch_prefix}<todo-name>" | grep -q .` (note: `git branch --list` always exits 0; you must check if stdout is non-empty)
+     - Branch exists (grep succeeded): `git worktree add .claude/worktrees/<todo-name> {branch_prefix}<todo-name>`
+     - Branch does not exist (grep failed): `git worktree add .claude/worktrees/<todo-name> -b {branch_prefix}<todo-name>`
 3. Sync worktree with latest `origin/{base_branch}`:
    1. `git fetch origin {base_branch}`
    2. In the worktree: `cd .claude/worktrees/<todo-name> && git merge origin/{base_branch} --no-edit`
